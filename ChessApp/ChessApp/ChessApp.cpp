@@ -20,24 +20,7 @@ void timer(chrono::seconds delay)
 void chess_menu() 
 {
 	system("cls");
-	if (lan)
-	{
-		cout << "\n\tSelect a programming approach!";
-		cout << "\n\n\t1. Dynamic";
-		cout << "\n\t2. Greedy";
-		//cout << "\n\t3. Divide et impera";
-	}
-	else
-	{
-		cout << "\n\tValassza ki a programozasi modszert!";
-		cout << "\n\n\t1. Dinamikus";
-		cout << "\n\t2. Greedy";
-		//cout << "\n\t3. Divide et Impera";
-	}
 
-	btn = _getch();
-
-	system("cls");
 	if (lan)
 	{
 		cout << "\n\tSelect a chess problem!";
@@ -53,6 +36,27 @@ void chess_menu()
 		cout << "\n\t2. Kiralyno lefedes";
 		cout << "\n\t3. Kiralyno lohaton lefedes";
 		cout << "\n\t4. Kulonallo bastyak";
+	}
+
+	btn = _getch();
+
+	system("cls");
+
+
+
+	if (lan)
+	{
+		cout << "\n\tSelect a programming approach!";
+		cout << "\n\n\t1. Dynamic";
+		cout << "\n\t2. Greedy";
+		cout << "\n\t3. Backtracking";
+	}
+	else
+	{
+		cout << "\n\tValassza ki a programozasi modszert!";
+		cout << "\n\n\t1. Dinamikus";
+		cout << "\n\t2. Greedy";
+		cout << "\n\t3. Backtracking";
 	}
 
 	btn = _getch();
@@ -144,21 +148,21 @@ void notes_menu()
 	{
 		cout << "\n\t\t Chess App\n";
 		cout << "\t Created by Torok Csongor\n";
-		cout << "\n\tThe app is meant for displaying and solving different mathematical chess problems\n\tand comparing these in terms of time and optimization.\n";
-		cout << "\n\tStep-by-step mode : Each time Space is pressed, the algorithm advances once.";
+		cout << "\n\tThe app is meant for displaying and solving different mathematical chess problems\n\tcomparing these in terms of time and optimization.\n";
+		cout << "\n\tStep-by-step mode : Each time Space is pressed, the algorithm advances one step.";
 		cout << "\n\tPausing mode : Each time Space is pressed, the algorithm stops.";
-		cout << "\n\tIn the this mode the algorithm advances in the given intervals value, representing milliseconds between each step.";
-		cout << "\n\nPress any button to return to the Main menu!";
+		cout << "\n\tIn the Pausing mode, the algorithm advances in the given intervals value, representing milliseconds between each step.";
+		cout << "\n\n\tPress any button to return to the Main menu!";
 	}
 	else
 	{
 		cout << "\n\t\t Sakk Alkalmazas\n";
-		cout << "\t Keszitette Torok Csongor\n";
+		cout << "\t     Keszitette Torok Csongor\n";
 		cout << "\n\tAz alkalmazast kulonbozo sakkos matematikai problemak megjelenitesere es megoldasara keszult\n\tilletve ezek osszehasonlitasara ido es optimalizalas szempontjabol.\n";
 		cout << "\n\tLepesrol-lepesre iteralas : Minden alkalommal amikor megnyomja a Space-t, egy lepest tesz az algoritmus.";
 		cout << "\n\tSzunetelo mod : Minden Space gomb lenyomasakor, szunetel az algoritmus futasa.";
 		cout << "\n\tEbben a modban az algoritmus az allithato idotartam erteke szerint lepked, miliszekundumokban szamolva.";
-		cout << "\n\nNyomjon meg barmilyen gombot a Fo Menuhoz valo visszatereshez!";
+		cout << "\n\n\tNyomjon meg barmilyen gombot a Fo Menuhoz valo visszatereshez!";
 	}
 
 	btn = _getch();
