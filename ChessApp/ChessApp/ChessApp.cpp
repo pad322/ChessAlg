@@ -6,10 +6,11 @@
 #include <fstream>
 
 char btn;
-bool run_mode = true;
-bool lan = true;
-bool intro = true;
-int interval = 500;
+bool run_mode;
+bool lan;
+bool intro;
+int interval;
+char c[5]={'0','0','0','0'};
 
 /*
 void timer(chrono::seconds delay)
@@ -26,17 +27,25 @@ void chess_menu()
 	if (lan)
 	{
 		std::cout << "\n\tSelect a chess problem!";
+		Sleep(40);
 		std::cout << "\n\n\t1. Queen problem with minimal nr. of pieces";
+		Sleep(40);
 		std::cout << "\n\t2. Queens dominating";
+		Sleep(40);
 		std::cout << "\n\t3. Queen on horseback";
+		Sleep(40);
 		std::cout << "\n\t4. Independent rooks";
 	}
 	else
 	{
 		std::cout << "\n\tValassza ki a sakk problemat";
+		Sleep(40);
 		std::cout << "\n\n\t1. Kiralyno problema legkevesebb darabbal";
+		Sleep(40);
 		std::cout << "\n\t2. Kiralyno lefedes";
+		Sleep(40);
 		std::cout << "\n\t3. Kiralyno lohaton lefedes";
+		Sleep(40);
 		std::cout << "\n\t4. Kulonallo bastyak";
 	}
 
@@ -49,28 +58,75 @@ void chess_menu()
 	if (lan)
 	{
 		std::cout << "\n\tSelect a programming approach!";
+		Sleep(40);
 		std::cout << "\n\n\t1. Dynamic";
+		Sleep(40);
 		std::cout << "\n\t2. Greedy";
+		Sleep(40);
 		std::cout << "\n\t3. Backtracking";
 	}
 	else
 	{
 		std::cout << "\n\tValassza ki a programozasi modszert!";
+		Sleep(40);
 		std::cout << "\n\n\t1. Dinamikus";
+		Sleep(40);
 		std::cout << "\n\t2. Greedy";
+		Sleep(40);
 		std::cout << "\n\t3. Backtracking";
+		Sleep(40);
 	}
 
 	btn = _getch();
 
 }
 
+void fill_settings()
+{
+	std::ofstream out("settings.txt", std::ofstream::trunc);
+
+	char output[3];
+
+	if (run_mode)
+	{
+		output[0] = '1';
+	}
+	else
+	{
+		output[0] = '0';
+	}
+
+	if (lan)
+	{
+		output[1] = '1';
+	}
+	else
+	{
+		output[1] = '0';
+	}
+
+	if (intro)
+	{
+		output[2] = '1';
+	}
+	else
+	{
+		output[2] = '0';
+	}
+
+	out << output[0] << output[1] << output[2] << ' ' << interval;
+
+	out.close();
+
+}
+
 void settings_menu()
 {
-	std::ofstream out("data.txt", std::ofstream::trunc);
 
 Settings:
 	system("cls");
+
+	Sleep(40);
 
 	if (lan)
 		std::cout << "\n\t1. Change Running mode - ";
@@ -92,12 +148,16 @@ Settings:
 			std::cout << "Szunetelheto mod\n";
 	}
 
+	Sleep(40);
+
 	if (lan)
 		std::cout << "\t2. Step interval - ";
 	else
 		std::cout << "\t2. Lepesenkenti idotartam - ";
 
 	std::cout << interval << '\n';
+
+	Sleep(40);
 
 
 	if (lan)
@@ -113,6 +173,8 @@ Settings:
 	{
 		std::cout << "Magyar\n";
 	}
+
+	Sleep(40);
 
 	if (lan)
 	{
@@ -137,6 +199,8 @@ Settings:
 			std::cout << "Bekapcsolva\n";
 	}
 
+	Sleep(40);
+
 	if (lan)
 		std::cout << "\t5. Back to Main Menu\n";
 	else
@@ -148,20 +212,24 @@ Settings:
 	{
 	case '1':
 		run_mode = !run_mode;
+		fill_settings();
 		goto Settings;
 		break;
 	case '2':
 		interval += 100;
 		if (interval > 1000)
 			interval = 100;
+		fill_settings();
 		goto Settings;
 		break;
 	case '3':
 		lan = !lan;
+		fill_settings();
 		goto Settings;
 		break;
 	case '4':
 		intro = !intro;
+		fill_settings();
 		goto Settings;
 		break;
 	case '5':
@@ -172,27 +240,58 @@ Settings:
 	}
 }
 
+void record_menu()
+{
+	system("cls");
+	if (lan)
+	{
+
+	}
+	else
+	{
+
+	}
+
+	btn = _getch();
+}
+
 void notes_menu()
 {
 	system("cls");
 	if(lan)
 	{
 		std::cout << "\n\t\t Chess:Alg\n";
+		Sleep(40);
 		std::cout << "\t Created by Torok Csongor\n";
-		std::cout << "\n\tThe app is meant for displaying and solving different mathematical chess problems\n\tcomparing these in terms of time and optimization.\n";
+		Sleep(40);
+		std::cout << "\n\tThe app was made for displaying and solving different mathematical chess problems\n\tcomparing these in terms of running time and optimization.\n";
+		Sleep(40);
 		std::cout << "\n\tStep-by-step mode : Each time Space is pressed, the algorithm advances one step.";
+		Sleep(40);
 		std::cout << "\n\tPausing mode : Each time Space is pressed, the algorithm stops.";
+		Sleep(40);
 		std::cout << "\n\tIn the Pausing mode, the algorithm advances in the given intervals value, representing milliseconds between each step.";
+		Sleep(40);
+		std::cout << "\n\n\tThe Recorded Times menu shows the best running times for each algorithm, categorized into the programming techniques.\n";
+		Sleep(40);
 		std::cout << "\n\n\tPress any button to return to the Main menu!";
 	}
 	else
 	{
 		std::cout << "\n\t\t Chess:Alg\n";
+		Sleep(40);
 		std::cout << "\t     Keszitette Torok Csongor\n";
+		Sleep(40);
 		std::cout << "\n\tAz alkalmazast kulonbozo sakkos matematikai problemak megjelenitesere es megoldasara keszult\n\tilletve ezek osszehasonlitasara ido es optimalizalas szempontjabol.\n";
+		Sleep(40);
 		std::cout << "\n\tLepesrol-lepesre iteralas : Minden alkalommal amikor megnyomja a Space-t, egy lepest tesz az algoritmus.";
+		Sleep(40);
 		std::cout << "\n\tSzunetelo mod : Minden Space gomb lenyomasakor, szunetel az algoritmus futasa.";
+		Sleep(40);
 		std::cout << "\n\tEbben a modban az algoritmus az allithato idotartam erteke szerint lepked, miliszekundumokban szamolva.";
+		Sleep(40);
+		std::cout << "\n\n\tA mentett idok menupontban az algoritmusok futasi idejei vannak elmentve, technikak szerint kategorizalva.\n";
+		Sleep(40);
 		std::cout << "\n\n\tNyomjon meg barmilyen gombot a Fo Menuhoz valo visszatereshez!";
 	}
 
@@ -206,6 +305,8 @@ void exit_part()
 void intro_screen()
 {
 	Sleep(500);
+
+	btn = _getch();
 
 	std::cout << '\n';
 	std::cout << "    _:_\n";
@@ -247,7 +348,7 @@ void intro_screen()
 	}
 	else
 	{
-		std::cout << "\n\tNyomjon meg barmilyen gombot a tovabblepeshez!";
+		std::cout << "\n\t\t\t   Nyomjon meg barmilyen gombot a tovabblepeshez!";
 	}
 
 	btn = _getch();
@@ -255,6 +356,33 @@ void intro_screen()
 
 int main()
 {
+
+	std::ifstream in("settings.txt");
+
+	for (int i = 0; i < 3; ++i)
+	{
+		in >> c[i];
+	}
+
+	in >> interval;
+
+	if (c[0] == '1')
+		run_mode = true;
+	else
+		run_mode = false;
+
+	if (c[1] == '1')
+		lan = true;
+	else
+		lan = false;
+
+	if (c[2] == '1')
+		intro = true;
+	else
+		intro = false;
+
+	in.close();
+
 	do
 	{
 		if (intro)
@@ -272,18 +400,30 @@ MainMenu :
 	if(lan)
 	{
 		std::cout << "\n\t\tMain Menu\n\n";
+		Sleep(40);
 		std::cout << "\t1. Chess Problems\n";
+		Sleep(40);
 		std::cout << "\t2. Settings\n";
+		Sleep(40);
 		std::cout << "\t3. Notes\n";
-		std::cout << "\t4. Exit\n";
+		Sleep(40);
+		std::cout << "\t4. Recorded Times\n";
+		Sleep(40);
+		std::cout << "\t5. Exit\n";
 	}
 	else
 	{
 		std::cout << "\n\t\tFo menu\n\n";
+		Sleep(40);
 		std::cout << "\t1. Sakk problemak\n";
+		Sleep(40);
 		std::cout << "\t2. Beallitasok\n";
+		Sleep(40);
 		std::cout << "\t3. Jegyzetek\n";
-		std::cout << "\t4. Kilepes\n";
+		Sleep(40);
+		std::cout << "\t4. Mentett idok\n";
+		Sleep(40);
+		std::cout << "\t5. Kilepes\n";
 	}
 
 	btn = _getch();
@@ -300,6 +440,9 @@ MainMenu :
 		notes_menu();
 		break;
 	case '4':
+		record_menu();
+		break;
+	case '5':
 
 		Exit :
 
@@ -308,12 +451,16 @@ MainMenu :
 		if (lan)
 		{
 			std::cout << "\n\tAre you sure you want to quit?\n";
+			Sleep(40);
 			std::cout << "\t1. Yes\t2. No";
+			Sleep(40);
 		}
 		else
 		{
 			std::cout << "\n\tBiztos ki szeretne lepni?\n";
+			Sleep(40);
 			std::cout << "\t1. Igen\t2. Nem";
+			Sleep(40);
 		}
 
 		btn = _getch();
