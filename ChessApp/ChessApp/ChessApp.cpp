@@ -10,7 +10,8 @@ bool run_mode;
 bool lan;
 bool intro;
 int interval;
-char c[5]={'0','0','0','0'};
+int mode;
+int task;
 
 /*
 void timer(chrono::seconds delay)
@@ -20,8 +21,93 @@ void timer(chrono::seconds delay)
 }
 */
 
+void guider()
+{
+
+	int n, m;
+
+	system("cls");
+
+	if (lan)
+	{
+		std::cout << "\n\t Please give the chess tables dimensions (NxM) : ";
+		std::cin >> n >> m;
+	}
+	else
+	{
+		std::cout << "\n\t Kerem adja meg a sakk tabla mereteit (NxM) : ";
+		std::cin >> n >> m;
+	}
+
+	if (!(n > 0 && m > 0) && !(n < 100 && m < 100))
+	{
+
+	}
+
+	switch (mode)
+	{
+	case 1:
+
+		switch (task)
+		{
+		case 1:
+			break;
+		case 2:
+			break;
+		case 3:
+			break;
+		case 4:
+			break;
+		default:
+			break;
+		}
+		break;
+	
+	case 2:
+
+		switch (task)
+		{
+		case 1:
+			break;
+		case 2:
+			break;
+		case 3:
+			break;
+		case 4:
+			break;
+		default:
+			break;
+		}
+		break;
+
+	case 3:
+		
+		switch (task)
+		{
+		case 1:
+			break;
+		case 2:
+			break;
+		case 3:
+			break;
+		case 4:
+			break;
+		default:
+			break;
+		}
+		break;
+
+	default :
+		break;
+	}
+
+}
+
 void chess_menu() 
 {
+
+Chess_Menu:
+
 	system("cls");
 
 	if (lan)
@@ -35,6 +121,8 @@ void chess_menu()
 		std::cout << "\n\t3. Queen on horseback";
 		Sleep(40);
 		std::cout << "\n\t4. Independent rooks";
+		Sleep(40);
+		std::cout << " \n\t5. Back to Main Menu";
 	}
 	else
 	{
@@ -47,13 +135,37 @@ void chess_menu()
 		std::cout << "\n\t3. Kiralyno lohaton lefedes";
 		Sleep(40);
 		std::cout << "\n\t4. Kulonallo bastyak";
+		Sleep(40);
+		std::cout << " \n\t5. Vissza a Fo Menube";
 	}
 
 	btn = _getch();
 
+	switch (btn)
+	{
+	case '1':
+		task = 1;
+		break;
+	case '2':
+		task = 2;
+		break;
+	case '3':
+		task = 3;
+		break;
+	case '4':
+		task = 4;
+		break;
+	case '5':
+		goto Chess_Menu_End;
+		break;
+	default :
+		goto Chess_Menu;
+		break;
+	}
+
+Chess_Menu_Mid:
+
 	system("cls");
-
-
 
 	if (lan)
 	{
@@ -78,6 +190,28 @@ void chess_menu()
 	}
 
 	btn = _getch();
+
+	switch (btn)
+	{
+	case '1':
+		mode = 1;
+		break;
+	case '2':
+		mode = 2;
+		break;
+	case '3':
+		mode = 3;
+		break;
+	default :
+		goto Chess_Menu_Mid;
+		break;
+	}
+
+	guider();
+
+Chess_Menu_End:
+
+	system("cls");
 
 }
 
@@ -138,14 +272,14 @@ Settings:
 		if (lan)
 			std::cout << "Step-by-step iteration\n";
 		else
-			std::cout << "Lepesrol-lepesre iteralva\n";
+			std::cout << "Lepesrol-lepesre iteralo\n";
 	}
 	else
 	{
 		if (lan)
-			std::cout << "Pausing mode\n";
+			std::cout << "Automatic mode\n";
 		else
-			std::cout << "Szunetelheto mod\n";
+			std::cout << "Automatikus mod\n";
 	}
 
 	Sleep(40);
@@ -268,9 +402,9 @@ void notes_menu()
 		Sleep(40);
 		std::cout << "\n\tStep-by-step mode : Each time Space is pressed, the algorithm advances one step.";
 		Sleep(40);
-		std::cout << "\n\tPausing mode : Each time Space is pressed, the algorithm stops.";
+		std::cout << "\n\tAutomatic mode : The algorithm iterates without any user input.";
 		Sleep(40);
-		std::cout << "\n\tIn the Pausing mode, the algorithm advances in the given intervals value, representing milliseconds between each step.";
+		std::cout << "\n\tIn the Automatic mode, the algorithm advances in the given intervals value, representing milliseconds between each step.";
 		Sleep(40);
 		std::cout << "\n\n\tThe Recorded Times menu shows the best running times for each algorithm, categorized into the programming techniques.\n";
 		Sleep(40);
@@ -286,7 +420,7 @@ void notes_menu()
 		Sleep(40);
 		std::cout << "\n\tLepesrol-lepesre iteralas : Minden alkalommal amikor megnyomja a Space-t, egy lepest tesz az algoritmus.";
 		Sleep(40);
-		std::cout << "\n\tSzunetelo mod : Minden Space gomb lenyomasakor, szunetel az algoritmus futasa.";
+		std::cout << "\n\Automatikus mod : Az algoritmus felhasznaloi bemenetek nelkul iteral.";
 		Sleep(40);
 		std::cout << "\n\tEbben a modban az algoritmus az allithato idotartam erteke szerint lepked, miliszekundumokban szamolva.";
 		Sleep(40);
@@ -306,7 +440,7 @@ void intro_screen()
 {
 	Sleep(500);
 
-	btn = _getch();
+	//btn = _getch();
 
 	std::cout << '\n';
 	std::cout << "    _:_\n";
@@ -356,6 +490,7 @@ void intro_screen()
 
 int main()
 {
+	char c[5];
 
 	std::ifstream in("settings.txt");
 

@@ -1,3 +1,5 @@
 ﻿cl : command line warning D9002: ignoring unknown option '/utf-10'
   ChessApp.cpp
+C:\Users\Csongi\Desktop\Chess_Problem_Solver\ChessApp\ChessApp\ChessApp.cpp(340,16): warning C4129: 'A': unrecognized character escape sequence
+C:\Users\Csongi\Desktop\Chess_Problem_Solver\ChessApp\ChessApp\ChessApp.cpp(375,15): warning C4129: '=': unrecognized character escape sequence
   ChessApp.vcxproj -> C:\Users\Csongi\Desktop\Chess_Problem_Solver\ChessApp\x64\Debug\ChessApp.exe
