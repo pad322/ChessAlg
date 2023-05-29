@@ -13,6 +13,8 @@ int interval;
 int mode;
 int task;
 
+int n, m;
+
 /*
 void timer(chrono::seconds delay)
 {
@@ -21,10 +23,77 @@ void timer(chrono::seconds delay)
 }
 */
 
+bool bt_safe_queen(int table[50][50], int s, int o)
+{
+
+	for (int i = 0; i < o; ++i)
+	{
+		if (table[s][i] == 1)
+		{
+			return false;
+		}
+	}
+
+	int i = s;
+	int j = o;
+
+	while(i>=0 && j>=0)
+	{
+		if (table[i][j] == 1)
+		{
+			return false;
+		}
+		--i;
+		--j;
+	}
+
+	i = s;
+	j = 0;
+
+	while (i<n && j>=0)
+	{
+		if (table[i][j] == 1)
+		{
+			return false;
+		}
+		++i;
+		--j;
+	}
+
+	return true;
+}
+
+bool bt_queen_p(int table[50][50], int j)
+{
+	int i = 0;
+
+	if (j >= n)
+	{
+		return true;
+	}
+
+	for (int i = 0; i < n; ++i)
+	{
+		if (bt_safe_queen(table, i, j))
+		{
+			table[i][j] = 1;
+			//Sleep(50);
+
+			if (bt_queen_p(table, j + 1))
+				return true;
+
+			table[i][j] = 0;
+		}
+	}
+
+	return false;
+}
+
 void guider()
 {
 
-	int n, m;
+	auto started = std::chrono::high_resolution_clock::now();
+	auto done = std::chrono::high_resolution_clock::now();
 
 	system("cls");
 
@@ -39,9 +108,23 @@ void guider()
 		std::cin >> n >> m;
 	}
 
-	if (!(n > 0 && m > 0) && !(n < 100 && m < 100))
-	{
+	system("cls");
 
+	if (!(n > 0 && m > 0) && !(n <= 50 && m <= 50))
+	{
+		std::cout << "Incorrect data";
+		Sleep(500);
+		goto Guider_End;
+	}
+
+	int table[50][50];
+
+	for (int i = 0; i < n; ++i)
+	{
+		for (int j = 0; j < m; ++j)
+		{
+			table[i][j] = 0;
+		}
 	}
 
 	switch (mode)
@@ -85,6 +168,21 @@ void guider()
 		switch (task)
 		{
 		case 1:
+			started = std::chrono::high_resolution_clock::now();
+			bt_queen_p(table,0);
+			done = std::chrono::high_resolution_clock::now();
+
+			for (int i = 0; i < n; ++i)
+			{
+				for (int j = 0; j < m; ++j)
+				{
+					std::cout << table[i][j] << ' ';
+				}
+				std::cout << '\n';
+			}
+			std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(done - started).count()<<'\n';
+			std::cout << "Program done, press any button to continue.";
+			btn = _getch();
 			break;
 		case 2:
 			break;
@@ -100,6 +198,10 @@ void guider()
 	default :
 		break;
 	}
+
+Guider_End:
+		
+	system("cls");
 
 }
 
@@ -420,7 +522,7 @@ void notes_menu()
 		Sleep(40);
 		std::cout << "\n\tLepesrol-lepesre iteralas : Minden alkalommal amikor megnyomja a Space-t, egy lepest tesz az algoritmus.";
 		Sleep(40);
-		std::cout << "\n\Automatikus mod : Az algoritmus felhasznaloi bemenetek nelkul iteral.";
+		std::cout << "\n\tAutomatikus mod : Az algoritmus felhasznaloi bemenetek nelkul iteral.";
 		Sleep(40);
 		std::cout << "\n\tEbben a modban az algoritmus az allithato idotartam erteke szerint lepked, miliszekundumokban szamolva.";
 		Sleep(40);
@@ -455,7 +557,7 @@ void intro_screen()
 	Sleep(40);
 	std::cout << "   )___(      {====}     _____  _                                   _             /\\  \n";
 	Sleep(40);
-	std::cout << "  /_____\\      )__(     / ____|| |                     _     /\\    | |           /  \\       (\=,  \n";
+	std::cout << "  /_____\\      )__(     / ____|| |                     _     /\\    | |           /  \\       (\\=,  \n";
 	Sleep(40);
 	std::cout << "   |   |      /____\\   | |     | |__    ___  ___  ___ (_)   /  \\   | |  __ _    (    )    //  .\\ \n";
 	Sleep(40);
