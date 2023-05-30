@@ -25,37 +25,30 @@ void timer(chrono::seconds delay)
 
 bool bt_safe_queen(int table[50][50], int s, int o)
 {
-
-	for (int i = 0; i < o; ++i)
-	{
+	for (int i = 0; i < o; ++i) // megnezzuk a sorat ha ures
 		if (table[s][i] == 1)
-		{
 			return false;
-		}
-	}
 
 	int i = s;
 	int j = o;
 
-	while(i>=0 && j>=0)
+	while(i>=0 && j>=0) // ellenorizzuk a bal felso atlot
 	{
 		if (table[i][j] == 1)
-		{
 			return false;
-		}
+
 		--i;
 		--j;
 	}
 
 	i = s;
-	j = 0;
+	j = o;
 
-	while (i<n && j>=0)
+	while (i<n && j>=0) // ellenorizzuk a bal also atlot
 	{
 		if (table[i][j] == 1)
-		{
 			return false;
-		}
+
 		++i;
 		--j;
 	}
@@ -65,9 +58,7 @@ bool bt_safe_queen(int table[50][50], int s, int o)
 
 bool bt_queen_p(int table[50][50], int j)
 {
-	int i = 0;
-
-	if (j >= n)
+	if (j == n)
 	{
 		return true;
 	}
@@ -99,20 +90,20 @@ void guider()
 
 	if (lan)
 	{
-		std::cout << "\n\t Please give the chess tables dimensions (NxM) : ";
-		std::cin >> n >> m;
+		std::cout << "\n\t Please enter the chess tables dimension (N) : ";
+		std::cin >> n;
 	}
 	else
 	{
-		std::cout << "\n\t Kerem adja meg a sakk tabla mereteit (NxM) : ";
-		std::cin >> n >> m;
+		std::cout << "\n\t Kerem adja meg a sakk tabla meretet (N) : ";
+		std::cin >> n;
 	}
 
 	system("cls");
 
 	if (!(n > 0 && m > 0) && !(n <= 50 && m <= 50))
 	{
-		std::cout << "Incorrect data";
+		std::cout << "Invalid data";
 		Sleep(500);
 		goto Guider_End;
 	}
@@ -170,7 +161,6 @@ void guider()
 		case 1:
 			started = std::chrono::high_resolution_clock::now();
 			bt_queen_p(table,0);
-			done = std::chrono::high_resolution_clock::now();
 
 			for (int i = 0; i < n; ++i)
 			{
@@ -180,6 +170,8 @@ void guider()
 				}
 				std::cout << '\n';
 			}
+
+			done = std::chrono::high_resolution_clock::now();
 			std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(done - started).count()<<'\n';
 			std::cout << "Program done, press any button to continue.";
 			btn = _getch();
@@ -216,7 +208,7 @@ Chess_Menu:
 	{
 		std::cout << "\n\tSelect a chess problem!";
 		Sleep(40);
-		std::cout << "\n\n\t1. Queen problem with minimal nr. of pieces";
+		std::cout << "\n\n\t1. N - Queen problem";
 		Sleep(40);
 		std::cout << "\n\t2. Queens dominating";
 		Sleep(40);
@@ -230,7 +222,7 @@ Chess_Menu:
 	{
 		std::cout << "\n\tValassza ki a sakk problemat";
 		Sleep(40);
-		std::cout << "\n\n\t1. Kiralyno problema legkevesebb darabbal";
+		std::cout << "\n\n\t1. N Kiralynos problema";
 		Sleep(40);
 		std::cout << "\n\t2. Kiralyno lefedes";
 		Sleep(40);
@@ -506,7 +498,7 @@ void notes_menu()
 		Sleep(40);
 		std::cout << "\n\tAutomatic mode : The algorithm iterates without any user input.";
 		Sleep(40);
-		std::cout << "\n\tIn the Automatic mode, the algorithm advances in the given intervals value, representing milliseconds between each step.";
+		std::cout << "\n\tIn the Automatic mode, the algorithm advances in the given value, representing milliseconds between each step.";
 		Sleep(40);
 		std::cout << "\n\n\tThe Recorded Times menu shows the best running times for each algorithm, categorized into the programming techniques.\n";
 		Sleep(40);
@@ -584,7 +576,7 @@ void intro_screen()
 	}
 	else
 	{
-		std::cout << "\n\t\t\t   Nyomjon meg barmilyen gombot a tovabblepeshez!";
+		std::cout << "\n\t\t\t   Nyomjon Barmilyen Gombot a Tovabblepeshez!";
 	}
 
 	btn = _getch();
