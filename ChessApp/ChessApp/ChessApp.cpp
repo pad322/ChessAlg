@@ -23,11 +23,25 @@ void timer(chrono::seconds delay)
 }
 */
 
+void basic_print(int table[50][50])
+{
+	for (int i = 0; i < n; ++i)
+	{
+		for (int j = 0; j < n; ++j)
+		{
+			std::cout << table[i][j] << ' ';
+		}
+		std::cout << '\n';
+	}
+}
+
 bool bt_safe_queen(int table[50][50], int s, int o)
 {
-	for (int i = 0; i < o; ++i) // megnezzuk a sorat ha ures
+	for (int i = 0; i < o; ++i) // megnezzuk az oszlopat ha ures
+	{
 		if (table[s][i] == 1)
 			return false;
+	}
 
 	int i = s;
 	int j = o;
@@ -67,13 +81,43 @@ bool bt_queen_p(int table[50][50], int j)
 	{
 		if (bt_safe_queen(table, i, j))
 		{
+
+			system("cls");
+
 			table[i][j] = 1;
 			//Sleep(50);
+			basic_print(table);
+
+			if (lan)
+			{
+				std::cout << "\nPlaced a queen on the [" << i << "] , [" << j << "] coordinates.\n";
+			}
+			else
+			{
+				std::cout << "\nElhelyezett egy kiralynot a(z) [" << i << "] , [" << j << "] koordinatakra.\n";
+			}
+
+			btn = _getch();
 
 			if (bt_queen_p(table, j + 1))
 				return true;
 
 			table[i][j] = 0;
+
+			system("cls");
+
+			basic_print(table);
+
+			if (lan)
+			{
+				std::cout << "\nRemoved [" << i << "] , [" << j << "], backtracking to a previous state.\n";
+			}
+			else
+			{
+				std::cout << "\nTorolve lett ["<< i << "] , [" << j << "], backtrack - el, vagyis visszafele lepked egy elozo allapothoz.\n";
+			}
+
+			btn = _getch();
 		}
 	}
 
@@ -112,7 +156,7 @@ void guider()
 
 	for (int i = 0; i < n; ++i)
 	{
-		for (int j = 0; j < m; ++j)
+		for (int j = 0; j < n; ++j)
 		{
 			table[i][j] = 0;
 		}
@@ -162,18 +206,29 @@ void guider()
 			started = std::chrono::high_resolution_clock::now();
 			bt_queen_p(table,0);
 
-			for (int i = 0; i < n; ++i)
+			system("cls");
+
+			basic_print(table);
+
+			if (lan)
 			{
-				for (int j = 0; j < m; ++j)
-				{
-					std::cout << table[i][j] << ' ';
-				}
-				std::cout << '\n';
+				std::cout << "\nThe algorithm has finished.\n";
+			}
+			else
+			{
+				std::cout << "\nAz algoritmus veget ert.\n";
 			}
 
 			done = std::chrono::high_resolution_clock::now();
-			std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(done - started).count()<<'\n';
-			std::cout << "Program done, press any button to continue.";
+			if (lan)
+			{
+				std::cout << "\nTotal running time : ";
+			}
+			else
+			{
+				std::cout << "\nTeljes futasi ido : ";
+			}
+			std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(done - started).count()<<" ms\n";
 			btn = _getch();
 			break;
 		case 2:
