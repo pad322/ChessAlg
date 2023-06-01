@@ -70,7 +70,41 @@ bool bt_safe_queen(int table[50][50], int s, int o)
 	return true;
 }
 
-bool bt_queen_p(int table[50][50], int j)
+bool bt_queen_p_auto(int table[50][50], int j)
+{
+	if (j == n)
+	{
+		return true;
+	}
+
+	for (int i = 0; i < n; ++i)
+	{
+		if (bt_safe_queen(table, i, j))
+		{
+			system("cls");
+
+			table[i][j] = 1;
+			basic_print(table);
+
+			Sleep(interval);
+
+			if (bt_queen_p_auto(table, j + 1))
+				return true;
+
+			table[i][j] = 0;
+
+			system("cls");
+
+			basic_print(table);
+
+			Sleep(interval);
+		}
+	}
+
+	return false;
+}
+
+bool bt_queen_p_non(int table[50][50], int j)
 {
 	if (j == n)
 	{
@@ -99,7 +133,7 @@ bool bt_queen_p(int table[50][50], int j)
 
 			btn = _getch();
 
-			if (bt_queen_p(table, j + 1))
+			if (bt_queen_p_non(table, j + 1))
 				return true;
 
 			table[i][j] = 0;
@@ -204,7 +238,16 @@ void guider()
 		{
 		case 1:
 			started = std::chrono::high_resolution_clock::now();
-			bt_queen_p(table,0);
+
+
+			if (run_mode)
+			{
+				bt_queen_p_non(table, 0);
+			}
+			else
+			{
+				bt_queen_p_auto(table, 0);
+			}
 
 			system("cls");
 
@@ -501,7 +544,7 @@ Settings:
 	case '2':
 		interval += 100;
 		if (interval > 1000)
-			interval = 100;
+			interval = 0;
 		fill_settings();
 		goto Settings;
 		break;
@@ -549,7 +592,7 @@ void notes_menu()
 		Sleep(40);
 		std::cout << "\n\tThe app was made for displaying and solving different mathematical chess problems\n\tcomparing these in terms of running time and optimization.\n";
 		Sleep(40);
-		std::cout << "\n\tStep-by-step mode : Each time Space is pressed, the algorithm advances one step.";
+		std::cout << "\n\tStep-by-step mode : Each time a button is pressed, the algorithm advances one step.";
 		Sleep(40);
 		std::cout << "\n\tAutomatic mode : The algorithm iterates without any user input.";
 		Sleep(40);
@@ -567,7 +610,7 @@ void notes_menu()
 		Sleep(40);
 		std::cout << "\n\tAz alkalmazast kulonbozo sakkos matematikai problemak megjelenitesere es megoldasara keszult\n\tilletve ezek osszehasonlitasara ido es optimalizalas szempontjabol.\n";
 		Sleep(40);
-		std::cout << "\n\tLepesrol-lepesre iteralas : Minden alkalommal amikor megnyomja a Space-t, egy lepest tesz az algoritmus.";
+		std::cout << "\n\tLepesrol-lepesre iteralas : Minden alkalommal amikor megnyomjunk egy gombot, egy lepest tesz az algoritmus.";
 		Sleep(40);
 		std::cout << "\n\tAutomatikus mod : Az algoritmus felhasznaloi bemenetek nelkul iteral.";
 		Sleep(40);
