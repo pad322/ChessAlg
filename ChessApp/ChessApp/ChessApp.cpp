@@ -35,13 +35,13 @@ void basic_print(int table[50][50])
 	}
 }
 
-void chess_table_print(int table[50][50]) // detailed chess table printer
+int attacked_table[50][50];
+
+int xcoord[50] = { 0 };
+int ycoord[50] = { 0 };
+
+void make_attacked_table(int table[50][50])
 {
-	int xcoord[50]= {0};
-	int ycoord[50]= {0};
-
-	char abc = 'A';
-
 	int k = 0;
 
 	for (int i = 0; i < n; ++i)
@@ -57,8 +57,6 @@ void chess_table_print(int table[50][50]) // detailed chess table printer
 			}
 		}
 	}
-
-	int attacked_table[50][50];
 
 	for (int i = 0; i < n; ++i)
 	{
@@ -83,6 +81,13 @@ void chess_table_print(int table[50][50]) // detailed chess table printer
 			}
 		}
 	}
+}
+
+void chess_table_print(int table[50][50]) // detailed chess table printer
+{
+	char abc = 'A';
+
+	make_attacked_table(table);
 
 	bool larger = false;
 	int temp = 0;
@@ -169,7 +174,85 @@ void chess_table_print(int table[50][50]) // detailed chess table printer
 	}
 }
 
-bool bt_safe_queen(int table[50][50], int s, int o) // Backtracking N-Queen safety checker
+bool dominating_safe_queen(int table[50][50],int s, int o) // Backtracking Dominating Queens safety checker
+{
+	for (int i = 0; i < n; ++i) 
+	{
+		if (table[i][o] == 1) 
+		{
+			return false;
+		}
+	}
+
+	for (int i = 0; i < n; ++i) 
+	{
+		if (table[s][i] == 1) 
+		{
+			return false;
+		}
+	}
+
+	int i = s;
+	int j = o;
+
+	while (i >= 0 && j >= 0) // ellenorizzuk a bal felso atlot
+	{
+		if (table[i][j] == 1)
+		{
+			return false;
+		}
+
+		--i;
+		--j;
+	}
+
+	i = s;
+	j = o;
+
+	while (i < n && j >= 0) // ellenorizzuk a bal also atlot
+	{
+		if (table[i][j] == 1)
+		{
+			return false;
+		}
+
+		++i;
+		--j;
+	}
+
+	i = s;
+	j = 0;
+
+	while (i < n && j < n) // ellenorizzuk a jobb also atlot
+	{
+		if (table[i][j] == 1)
+		{
+			return false;
+		}
+
+		++i;
+		++j;
+	}
+
+	i = s;
+	j = 0;
+
+	while (i >= 0 && j < n) // ellenorizzuk a jobb also atlot
+	{
+		if (table[i][j] == 1)
+		{
+			return false;
+		}
+
+		--i;
+		++j;
+	}
+
+	return true;
+
+}
+
+bool safe_queen(int table[50][50], int s, int o) // Backtracking N-Queen safety checker
 {
 	for (int i = 0; i < o; ++i) // megnezzuk az oszlopat ha ures
 	{
@@ -210,7 +293,7 @@ bool bt_safe_queen(int table[50][50], int s, int o) // Backtracking N-Queen safe
 	return true;
 }
 
-bool bt_safe_queen_man(int table[50][50], int s, int o) // Backtracking N-Queen safety checker, with text
+bool safe_queen_man(int table[50][50], int s, int o) // Backtracking N-Queen safety checker, with text
 {
 	for (int i = 0; i < o; ++i)
 	{
@@ -309,7 +392,7 @@ bool bt_queen_auto(int table[50][50], int j) // Backtracking N-Queen, automatic 
 
 	for (int i = 0; i < n; ++i)
 	{
-		if (bt_safe_queen(table, i, j))
+		if (safe_queen(table, i, j))
 		{
 			system("cls");
 
@@ -346,7 +429,7 @@ bool bt_queen_man(int table[50][50], int j) // Backtracking N-Queen, manual iter
 
 	for (int i = 0; i < n; ++i)
 	{
-		if (bt_safe_queen_man(table, i, j))
+		if (safe_queen_man(table, i, j))
 		{
 			system("cls");
 
@@ -402,6 +485,115 @@ bool bt_queen_man(int table[50][50], int j) // Backtracking N-Queen, manual iter
 	return false;
 }
 
+void dyn_queen_man()
+{
+
+}
+
+void dyn_queen_auto()
+{
+
+}
+
+bool bt_dominating_queen_man(int table[50][50],int j) // Backtracking Independent Dominating Queens Problem, automatic
+{
+	if (j == n)
+	{
+		return true;
+	}
+
+	bool found = true;
+
+	for (int i = 0; i < n; ++i) {
+		if (dominating_safe_queen(table, i, j)) 
+		{
+
+			system("cls");
+
+			table[i][j] = 1;
+
+			make_attacked_table(table);
+
+			chess_table_print(table);
+
+			for (int i = 0; i < n; ++i)
+			{
+				for (int j = 0; j < n; ++j)
+				{
+					if (attacked_table[i][j] == 0)
+					{
+						found = false;
+					}
+				}
+			}
+
+			if (found)
+			{
+				if (lan)
+				{
+					std::cout << "Found a solution!\n";
+				}
+				else
+				{
+					std::cout << "Talalt egy megoldast!\n";
+				}
+				found = true;
+				goto Teleport;
+			}
+
+			btn = _getch();
+
+			if (bt_dominating_queen_man(table, j + 1))
+				return true;
+
+			table[i][j] = 0;
+
+			make_attacked_table(table);
+
+			system("cls");
+
+			chess_table_print(table);
+
+			for (int i = 0; i < n; ++i)
+			{
+				for (int j = 0; j < n; ++j)
+				{
+					if (attacked_table[i][j] == 0)
+					{
+						found = false;
+					}
+				}
+			}
+
+			if (found)
+			{
+				if (lan)
+				{
+					std::cout << "Found a solution!\n";
+				}
+				else
+				{
+					std::cout << "Talalt egy megoldast!\n";
+				}
+				found = true;
+				goto Teleport;
+			}
+
+			btn = _getch();
+
+		}
+	}
+
+	return false;
+
+	if (false)
+	{
+	Teleport:
+		j = n;
+		return true;
+	}
+}
+
 void guider()
 {
 
@@ -442,11 +634,13 @@ void guider()
 
 	switch (mode)
 	{
-	case 1:
+	case 1: // Dynamic algorithms
 
 		switch (task)
 		{
-		case 1:
+		case 1: // N-Queen
+			dyn_queen_auto();
+			btn = _getch();
 			break;
 		case 2:
 			break;
@@ -459,11 +653,11 @@ void guider()
 		}
 		break;
 	
-	case 2:
+	case 2: // Greedy algorithms
 
 		switch (task)
 		{
-		case 1:
+		case 1: // N-Queen
 			break;
 		case 2:
 			break;
@@ -476,11 +670,11 @@ void guider()
 		}
 		break;
 
-	case 3:
+	case 3: // Backtracking algorithms
 		
 		switch (task)
 		{
-		case 1:
+		case 1: // N-Queen
 			started = std::chrono::high_resolution_clock::now();
 
 			if (run_mode)
@@ -518,6 +712,21 @@ void guider()
 			btn = _getch();
 			break;
 		case 2:
+
+			if (!bt_dominating_queen_man(table, 0))
+			{
+				if (lan)
+				{
+					std::cout << "No solution has been found.\n";
+				}
+				else
+				{
+					std::cout << "Nem talalt megoldast.\n";
+				}
+			}
+
+			btn = _getch();
+
 			break;
 		case 3:
 			break;
@@ -551,9 +760,9 @@ Chess_Menu:
 		Sleep(40);
 		std::cout << "\n\n\t1. N - Queen problem";
 		Sleep(40);
-		std::cout << "\n\t2. Queens dominating";
+		std::cout << "\n\t2. Queens independent dominating";
 		Sleep(40);
-		std::cout << "\n\t3. Queen on horseback";
+		std::cout << "\n\t3. Queen on horseback dominating";
 		Sleep(40);
 		std::cout << "\n\t4. Independent rooks";
 		Sleep(40);
@@ -565,7 +774,7 @@ Chess_Menu:
 		Sleep(40);
 		std::cout << "\n\n\t1. N Kiralynos problema";
 		Sleep(40);
-		std::cout << "\n\t2. Kiralyno lefedes";
+		std::cout << "\n\t2. Kiralyno kulonallo lefedes";
 		Sleep(40);
 		std::cout << "\n\t3. Kiralyno lohaton lefedes";
 		Sleep(40);
