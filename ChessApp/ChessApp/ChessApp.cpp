@@ -35,21 +35,159 @@ void basic_print(int table[50][50])
 	}
 }
 
-bool bt_safe_queen(int table[50][50], int s, int o)
+void chess_table_print(int table[50][50]) // detailed chess table printer
+{
+	int xcoord[50]= {0};
+	int ycoord[50]= {0};
+
+	char abc = 'A';
+
+	int k = 0;
+
+	for (int i = 0; i < n; ++i)
+	{
+		for (int j = 0; j < n; ++j)
+		{
+			if (table[i][j] == 1)
+			{
+				xcoord[k] = i;
+				ycoord[k] = j;
+				//std::cout << xcoord[k] << ' ' << ycoord[k] << '\n';
+				k++;
+			}
+		}
+	}
+
+	int attacked_table[50][50];
+
+	for (int i = 0; i < n; ++i)
+	{
+		for (int j = 0; j < n; ++j)
+		{
+			attacked_table[i][j] = 0;
+
+			for (int l = 0; l < k; ++l)
+			{
+				if (xcoord[l] == i && ycoord[l] == j)
+				{
+					attacked_table[i][j] = 2; // 2 jelzi ha kiralyno van az adott kockan
+				}
+				else if ((xcoord[l] == i || ycoord[l] == j) && table[i][j] != 2)
+				{
+					attacked_table[i][j] = 1; // 1 jelzi ha tamadva van a pont
+				}
+				else if (std::abs((xcoord[l]) - i) == std::abs((ycoord[l]) - j) && table[i][j] != 2)
+				{
+					attacked_table[i][j] = 1;
+				}
+			}
+		}
+	}
+
+	bool larger = false;
+	int temp = 0;
+	int number = 1;
+
+	if (n < 39)
+	{
+		int rows = 0;
+
+		while (rows < n)
+		{
+			if (abc > 'Z' && !larger)
+			{
+				abc = 'a';
+				larger = true;
+			}
+			std::cout << "   " << abc << "  ";
+			abc++;
+			rows++;
+		}
+
+		std::cout << "\n";
+
+		rows = 0;
+
+		while (rows < n)
+		{
+			std::cout << "------";
+			rows++;
+		}
+
+		std::cout << "-\n";
+
+		for (int i = 0; i < n; ++i)
+		{
+			while (temp < 3)
+			{
+				for (int j = 0; j < n; ++j)
+				{
+					if (attacked_table[i][j] == 0)
+					{
+						std::cout << "|     ";
+					}
+					if (attacked_table[i][j] == 1)
+					{
+						std::cout << "|#####";
+					}
+					if (attacked_table[i][j] == 2)
+					{
+						if (temp != 1)
+						{
+							std::cout << "|     ";
+						}
+						else
+						{
+							std::cout << "|  Q  ";
+						}
+					}
+				}
+
+				std::cout << '|';
+
+				if (temp == 1)
+				{
+					std::cout << "   " << number;
+					number++;
+				}
+
+				temp++;
+
+				std::cout << '\n';
+			}
+			temp = 0;
+
+			rows = 0;
+			while (rows < n)
+			{
+				std::cout << "------";
+				rows++;
+			}
+
+			std::cout << "-\n";
+		}
+	}
+}
+
+bool bt_safe_queen(int table[50][50], int s, int o) // Backtracking N-Queen safety checker
 {
 	for (int i = 0; i < o; ++i) // megnezzuk az oszlopat ha ures
 	{
 		if (table[s][i] == 1)
+		{
 			return false;
+		}
 	}
 
 	int i = s;
 	int j = o;
 
-	while(i>=0 && j>=0) // ellenorizzuk a bal felso atlot
+	while (i >= 0 && j >= 0) // ellenorizzuk a bal felso atlot
 	{
 		if (table[i][j] == 1)
+		{
 			return false;
+		}
 
 		--i;
 		--j;
@@ -58,10 +196,12 @@ bool bt_safe_queen(int table[50][50], int s, int o)
 	i = s;
 	j = o;
 
-	while (i<n && j>=0) // ellenorizzuk a bal also atlot
+	while (i < n && j >= 0) // ellenorizzuk a bal also atlot
 	{
 		if (table[i][j] == 1)
+		{
 			return false;
+		}
 
 		++i;
 		--j;
@@ -70,7 +210,97 @@ bool bt_safe_queen(int table[50][50], int s, int o)
 	return true;
 }
 
-bool bt_queen_p_auto(int table[50][50], int j)
+bool bt_safe_queen_man(int table[50][50], int s, int o) // Backtracking N-Queen safety checker, with text
+{
+	for (int i = 0; i < o; ++i)
+	{
+		if (table[s][i] == 1)
+		{
+			if (lan)
+			{
+				std::cout << "The queen placed on [" << s << "] , [" << i << "]";
+				Sleep(40);
+				std::cout<< "dominates her row.\n";
+			}
+			else
+			{
+				std::cout << "[" << s << "] , [" << i << "] kiralyno miatt";
+				Sleep(40);
+				std::cout << " a sora le van fedve.\n";
+			}
+
+			btn = _getch();
+
+			return false;
+		}
+	}
+
+	int i = s;
+	int j = o;
+
+	while(i>=0 && j>=0)
+	{
+		if (table[i][j] == 1)
+		{
+			if (lan)
+			{
+				std::cout << "The queen placed on [" << i << "] , [" << j << "]";
+				Sleep(40);
+				std::cout << " attacks her lower right diagonal.\n";
+				Sleep(40);
+			}
+			else
+			{
+				std::cout << "[" << i << "] , [" << j << "]-re helyezett kiralyno";
+				Sleep(40);
+				std::cout << " lefedi a jobb also atlojat.\n";
+				Sleep(40);
+			}
+
+			btn = _getch();
+
+			return false;
+		}
+
+		--i;
+		--j;
+	}
+
+	i = s;
+	j = o;
+
+	while (i<n && j>=0)
+	{
+		if (table[i][j] == 1)
+		{
+			if (lan)
+			{
+				std::cout << "The queen placed on [" << i << "] , [" << j << "]";
+				Sleep(40);
+				std::cout << " attacks her upper right diagonal.\n";
+				Sleep(40);
+			}
+			else
+			{
+				std::cout << "[" << i << "] , [" << j << "]-re helyezett kiralyno";
+				Sleep(40);
+				std::cout << " lefedi a jobb felso atlojat.\n";
+				Sleep(40);
+			}
+
+			btn = _getch();
+
+			return false;
+		}
+
+		++i;
+		--j;
+	}
+
+	return true;
+}
+
+bool bt_queen_auto(int table[50][50], int j) // Backtracking N-Queen, automatic iteration
 {
 	if (j == n)
 	{
@@ -84,18 +314,21 @@ bool bt_queen_p_auto(int table[50][50], int j)
 			system("cls");
 
 			table[i][j] = 1;
-			basic_print(table);
+			
+			//basic_print(table);
+			chess_table_print(table);
 
 			Sleep(interval);
 
-			if (bt_queen_p_auto(table, j + 1))
+			if (bt_queen_auto(table, j + 1))
 				return true;
 
 			table[i][j] = 0;
 
 			system("cls");
 
-			basic_print(table);
+			//basic_print(table);
+			chess_table_print(table);
 
 			Sleep(interval);
 		}
@@ -104,7 +337,7 @@ bool bt_queen_p_auto(int table[50][50], int j)
 	return false;
 }
 
-bool bt_queen_p_non(int table[50][50], int j)
+bool bt_queen_man(int table[50][50], int j) // Backtracking N-Queen, manual iteration
 {
 	if (j == n)
 	{
@@ -113,45 +346,56 @@ bool bt_queen_p_non(int table[50][50], int j)
 
 	for (int i = 0; i < n; ++i)
 	{
-		if (bt_safe_queen(table, i, j))
+		if (bt_safe_queen_man(table, i, j))
 		{
-
 			system("cls");
 
 			table[i][j] = 1;
 			//Sleep(50);
-			basic_print(table);
+			//basic_print(table);
+			chess_table_print(table);
 
 			if (lan)
 			{
+				Sleep(40);
 				std::cout << "\nPlaced a queen on the [" << i << "] , [" << j << "] coordinates.\n";
 			}
 			else
 			{
+				Sleep(40);
 				std::cout << "\nElhelyezett egy kiralynot a(z) [" << i << "] , [" << j << "] koordinatakra.\n";
 			}
 
 			btn = _getch();
 
-			if (bt_queen_p_non(table, j + 1))
+			if (bt_queen_man(table, j + 1))
 				return true;
 
 			table[i][j] = 0;
 
 			system("cls");
 
-			basic_print(table);
+			//basic_print(table);
+			chess_table_print(table);
 
 			if (lan)
 			{
-				std::cout << "\nRemoved [" << i << "] , [" << j << "], backtracking to a previous state.\n";
+				Sleep(40);
+				std::cout << "\nRemoved [" << i << "] , [" << j << "]\n";
+				Sleep(40);
+				std::cout << "Backtracking to a previous state.\n";
 			}
 			else
 			{
-				std::cout << "\nTorolve lett ["<< i << "] , [" << j << "], backtrack - el, vagyis visszafele lepked egy elozo allapothoz.\n";
+				Sleep(40);
+				std::cout << "\nTorolve lett [" << i << "] , [" << j << "]\n";
+				Sleep(40);
+				std::cout << "Backtrack - el, vagyis visszafele lepked egy elozo allapothoz.\n";
 			}
 
 			btn = _getch();
+
+
 		}
 	}
 
@@ -168,12 +412,12 @@ void guider()
 
 	if (lan)
 	{
-		std::cout << "\n\t Please enter the chess tables dimension (N) : ";
+		std::cout << "\n\t Please enter the chess tables dimension (NxN) : ";
 		std::cin >> n;
 	}
 	else
 	{
-		std::cout << "\n\t Kerem adja meg a sakk tabla meretet (N) : ";
+		std::cout << "\n\t Kerem adja meg a sakk tabla meretet (NxN) : ";
 		std::cin >> n;
 	}
 
@@ -239,19 +483,18 @@ void guider()
 		case 1:
 			started = std::chrono::high_resolution_clock::now();
 
-
 			if (run_mode)
 			{
-				bt_queen_p_non(table, 0);
+				bt_queen_man(table, 0);
 			}
 			else
 			{
-				bt_queen_p_auto(table, 0);
+				bt_queen_auto(table, 0);
 			}
 
 			system("cls");
 
-			basic_print(table);
+			chess_table_print(table);
 
 			if (lan)
 			{
@@ -592,9 +835,9 @@ void notes_menu()
 		Sleep(40);
 		std::cout << "\n\tThe app was made for displaying and solving different mathematical chess problems\n\tcomparing these in terms of running time and optimization.\n";
 		Sleep(40);
-		std::cout << "\n\tStep-by-step mode : Each time a button is pressed, the algorithm advances one step.";
+		std::cout << "\n\tStep-by-step mode : Each time a button is pressed, the algorithm advances one step. \n\tHighly recommended running mode!\n";
 		Sleep(40);
-		std::cout << "\n\tAutomatic mode : The algorithm iterates without any user input.";
+		std::cout << "\n\tAutomatic mode : The algorithm runs without any user input.";
 		Sleep(40);
 		std::cout << "\n\tIn the Automatic mode, the algorithm advances in the given value, representing milliseconds between each step.";
 		Sleep(40);
@@ -610,9 +853,9 @@ void notes_menu()
 		Sleep(40);
 		std::cout << "\n\tAz alkalmazast kulonbozo sakkos matematikai problemak megjelenitesere es megoldasara keszult\n\tilletve ezek osszehasonlitasara ido es optimalizalas szempontjabol.\n";
 		Sleep(40);
-		std::cout << "\n\tLepesrol-lepesre iteralas : Minden alkalommal amikor megnyomjunk egy gombot, egy lepest tesz az algoritmus.";
+		std::cout << "\n\tLepesrol-lepesre iteralas : Minden alkalommal amikor megnyomjunk egy gombot, egy lepest tesz az algoritmus. \n\tAjanlott futtatasi modszer!\n";
 		Sleep(40);
-		std::cout << "\n\tAutomatikus mod : Az algoritmus felhasznaloi bemenetek nelkul iteral.";
+		std::cout << "\n\tAutomatikus mod : Az algoritmus felhasznaloi bemenetek nelkul lepked.";
 		Sleep(40);
 		std::cout << "\n\tEbben a modban az algoritmus az allithato idotartam erteke szerint lepked, miliszekundumokban szamolva.";
 		Sleep(40);
