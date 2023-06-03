@@ -221,7 +221,7 @@ bool dominating_safe_queen(int table[50][50],int s, int o) // Backtracking Domin
 	}
 
 	i = s;
-	j = 0;
+	j = o;
 
 	while (i < n && j < n) // ellenorizzuk a jobb also atlot
 	{
@@ -235,7 +235,7 @@ bool dominating_safe_queen(int table[50][50],int s, int o) // Backtracking Domin
 	}
 
 	i = s;
-	j = 0;
+	j = o;
 
 	while (i >= 0 && j < n) // ellenorizzuk a jobb also atlot
 	{
@@ -451,6 +451,19 @@ bool bt_queen_man(int table[50][50], int j) // Backtracking N-Queen, manual iter
 
 			btn = _getch();
 
+			if (btn == 'a')
+			{
+				if (lan)
+				{
+					std::cout << "\nProgram aborted.";
+				}
+				else
+				{
+					std::cout << "\nProgram megallitva.";
+				}
+				return true;
+			}
+
 			if (bt_queen_man(table, j + 1))
 				return true;
 
@@ -478,6 +491,19 @@ bool bt_queen_man(int table[50][50], int j) // Backtracking N-Queen, manual iter
 
 			btn = _getch();
 
+			if (btn == 'a')
+			{
+				if (lan)
+				{
+					std::cout << "\nProgram aborted.";
+				}
+				else
+				{
+					std::cout << "\nProgram megallitva.";
+				}
+				return true;
+			}
+
 
 		}
 	}
@@ -495,103 +521,240 @@ void dyn_queen_auto()
 
 }
 
-bool bt_dominating_queen_man(int table[50][50],int j) // Backtracking Independent Dominating Queens Problem, automatic
+int min_nr = 99;
+
+bool bt_dominating_queen_man(int table[50][50],int nr) // Backtracking Independent Dominating Queens Problem, manual
 {
-	if (j == n)
+	if (nr >= min_nr && btn == 'a')
 	{
 		return true;
 	}
 
-	bool found = true;
+	bool found = false;
+	bool nul = false;
 
-	for (int i = 0; i < n; ++i) {
-		if (dominating_safe_queen(table, i, j)) 
+	while (!found)
+	{
+		make_attacked_table(table);
+
+		for (int i = 0; i < n; ++i)
+			for (int j = 0; j < n; ++j)
+			{
+				if (attacked_table[i][j] == 0)
+				{
+					nul = true;
+					break;
+				}
+			}
+
+		if (nul)
+		{
+			found = true;
+		}
+
+		if (found)
+		{
+			break;
+		}
+
+		system("cls");
+		chess_table_print(table);
+		min_nr = nr;
+		if (lan)
+		{
+			if(min_nr == n/2+1 || min_nr == n/2)
+				std::cout << "Found an optimal solution!\n";
+			else
+				std::cout << "Found a partial solution!\n";
+		}
+		else
+		{
+			if (min_nr == n / 2 + 1 || min_nr == n / 2)
+			{
+				std::cout << "Talalt egy optimalis megoldast!\n";
+			}
+
+			else
+				std::cout << "Talalt egy parcialis megoldast!\n";
+		}
+
+		std::cout << min_nr << '\n';
+		btn = _getch();
+
+		if (btn == 'a')
+		{
+			if (lan)
+			{
+				std::cout << "\nProgram aborted.";
+			}
+			else
+			{
+				std::cout << "\nProgram megallitva.";
+			}
+			return true;
+		}
+
+		break;
+
+	}
+
+	for (int i = 0; i < n; ++i) 
+	{
+		for (int j = 0; j < n;++j)
 		{
 
-			system("cls");
-
-			table[i][j] = 1;
-
-			make_attacked_table(table);
-
-			chess_table_print(table);
-
-			for (int i = 0; i < n; ++i)
+			if (dominating_safe_queen(table, i, j))
 			{
-				for (int j = 0; j < n; ++j)
+				system("cls");
+
+				table[i][j] = 1;
+
+				chess_table_print(table);
+
+				btn = _getch();
+
+				if (btn == 'a')
 				{
-					if (attacked_table[i][j] == 0)
+					if (lan)
 					{
-						found = false;
+						std::cout << "\nProgram aborted.";
 					}
-				}
-			}
-
-			if (found)
-			{
-				if (lan)
-				{
-					std::cout << "Found a solution!\n";
-				}
-				else
-				{
-					std::cout << "Talalt egy megoldast!\n";
-				}
-				found = true;
-				goto Teleport;
-			}
-
-			btn = _getch();
-
-			if (bt_dominating_queen_man(table, j + 1))
-				return true;
-
-			table[i][j] = 0;
-
-			make_attacked_table(table);
-
-			system("cls");
-
-			chess_table_print(table);
-
-			for (int i = 0; i < n; ++i)
-			{
-				for (int j = 0; j < n; ++j)
-				{
-					if (attacked_table[i][j] == 0)
+					else
 					{
-						found = false;
+						std::cout << "\nProgram megallitva.";
 					}
+					return true;
+				}
+
+				if (bt_dominating_queen_man(table, nr + 1))
+					return true;
+
+				table[i][j] = 0;
+
+				make_attacked_table(table);
+
+				system("cls");
+
+				chess_table_print(table);
+
+				btn = _getch();
+
+				if (btn == 'a')
+				{
+					if (lan)
+					{
+						std::cout << "\nProgram aborted.";
+					}
+					else
+					{
+						std::cout << "\nProgram megallitva.";
+					}
+					return true;
 				}
 			}
-
-			if (found)
-			{
-				if (lan)
-				{
-					std::cout << "Found a solution!\n";
-				}
-				else
-				{
-					std::cout << "Talalt egy megoldast!\n";
-				}
-				found = true;
-				goto Teleport;
-			}
-
-			btn = _getch();
-
 		}
 	}
 
 	return false;
 
+	/*
 	if (false)
 	{
 	Teleport:
 		j = n;
 		return true;
 	}
+	*/
+}
+
+bool bt_dominating_queen_auto(int table[50][50],int nr)
+{
+	if (nr >= min_nr && btn == 'a')
+	{
+		return true;
+	}
+
+	bool found = false;
+	bool nul = false;
+
+	while (!found)
+	{
+		make_attacked_table(table);
+
+		for (int i = 0; i < n; ++i)
+			for (int j = 0; j < n; ++j)
+			{
+				if (attacked_table[i][j] == 0)
+				{
+					nul = true;
+					break;
+				}
+			}
+
+		if (nul)
+		{
+			found = true;
+		}
+
+		if (found)
+		{
+			break;
+		}
+
+		system("cls");
+		chess_table_print(table);
+		min_nr = nr;
+
+		if (min_nr == n / 2 +1 && min_nr == n / 2)
+		{
+			if (lan)
+			{
+				std::cout << "Found an optimal solution!\n";
+			}
+			else
+			{
+				std::cout << "Talalt egy optimalis megoldast!\n";
+			}
+			return true;
+		}
+
+		break;
+
+	}
+
+	for (int i = 0; i < n; ++i)
+	{
+		for (int j = 0; j < n; ++j)
+		{
+
+			if (dominating_safe_queen(table, i, j))
+			{
+				system("cls");
+
+				table[i][j] = 1;
+
+				chess_table_print(table);
+
+				Sleep(interval);
+
+				if (bt_dominating_queen_auto(table, nr + 1))
+					return true;
+
+				table[i][j] = 0;
+
+				make_attacked_table(table);
+
+				system("cls");
+
+				chess_table_print(table);
+
+				Sleep(interval);
+
+			}
+		}
+	}
+
+	return false;
 }
 
 void guider()
@@ -686,6 +849,8 @@ void guider()
 				bt_queen_auto(table, 0);
 			}
 
+			/*
+
 			system("cls");
 
 			chess_table_print(table);
@@ -699,6 +864,8 @@ void guider()
 				std::cout << "\nAz algoritmus veget ert.\n";
 			}
 
+			*/
+
 			done = std::chrono::high_resolution_clock::now();
 			if (lan)
 			{
@@ -711,20 +878,39 @@ void guider()
 			std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(done - started).count()<<" ms\n";
 			btn = _getch();
 			break;
-		case 2:
 
-			if (!bt_dominating_queen_man(table, 0))
+		case 2: // Dominating Independent Queens
+
+			if (run_mode)
 			{
-				if (lan)
+				if (!bt_dominating_queen_man(table, 0))
 				{
-					std::cout << "No solution has been found.\n";
+					if (lan)
+					{
+						std::cout << "No solution has been found.\n";
+					}
+					else
+					{
+						std::cout << "Nem talalt megoldast.\n";
+					}
 				}
-				else
+			}
+			else
+			{
+				if (!bt_dominating_queen_auto(table, 0))
 				{
-					std::cout << "Nem talalt megoldast.\n";
+					if (lan)
+					{
+						std::cout << "No solution has been found.\n";
+					}
+					else
+					{
+						std::cout << "Nem talalt megoldast.\n";
+					}
 				}
 			}
 
+			min_nr = 99;
 			btn = _getch();
 
 			break;
@@ -1044,7 +1230,7 @@ void notes_menu()
 		Sleep(40);
 		std::cout << "\n\tThe app was made for displaying and solving different mathematical chess problems\n\tcomparing these in terms of running time and optimization.\n";
 		Sleep(40);
-		std::cout << "\n\tStep-by-step mode : Each time a button is pressed, the algorithm advances one step. \n\tHighly recommended running mode!\n";
+		std::cout << "\n\tStep-by-step mode : Each time a button is pressed, the algorithm advances one step. \n\tWhile running, we can stop the program by pressing the 'a' button.\n\tHighly recommended running mode!\n";
 		Sleep(40);
 		std::cout << "\n\tAutomatic mode : The algorithm runs without any user input.";
 		Sleep(40);
@@ -1062,7 +1248,7 @@ void notes_menu()
 		Sleep(40);
 		std::cout << "\n\tAz alkalmazast kulonbozo sakkos matematikai problemak megjelenitesere es megoldasara keszult\n\tilletve ezek osszehasonlitasara ido es optimalizalas szempontjabol.\n";
 		Sleep(40);
-		std::cout << "\n\tLepesrol-lepesre iteralas : Minden alkalommal amikor megnyomjunk egy gombot, egy lepest tesz az algoritmus. \n\tAjanlott futtatasi modszer!\n";
+		std::cout << "\n\tLepesrol-lepesre iteralas : Minden alkalommal amikor megnyomjunk egy gombot, egy lepest tesz az algoritmus. \n\tFutas kozben az 'a' gomb megnyomasaval megallithajuk a programot.\n\tAjanlott futtatasi modszer!\n";
 		Sleep(40);
 		std::cout << "\n\tAutomatikus mod : Az algoritmus felhasznaloi bemenetek nelkul lepked.";
 		Sleep(40);
