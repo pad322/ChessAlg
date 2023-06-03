@@ -607,7 +607,11 @@ bool bt_dominating_queen_man(int table[50][50],int nr) // Backtracking Independe
 			{
 				system("cls");
 
-				table[i][j] = 1;
+
+				if (nr >= n / 2 + 1)
+				{
+					continue;
+				}
 
 				chess_table_print(table);
 
@@ -630,8 +634,6 @@ bool bt_dominating_queen_man(int table[50][50],int nr) // Backtracking Independe
 					return true;
 
 				table[i][j] = 0;
-
-				make_attacked_table(table);
 
 				system("cls");
 
@@ -669,10 +671,12 @@ bool bt_dominating_queen_man(int table[50][50],int nr) // Backtracking Independe
 
 bool bt_dominating_queen_auto(int table[50][50],int nr)
 {
-	if (nr >= min_nr && btn == 'a')
+	/*
+	if (nr >= min_nr)
 	{
 		return true;
 	}
+	*/
 
 	bool found = false;
 	bool nul = false;
@@ -702,11 +706,11 @@ bool bt_dominating_queen_auto(int table[50][50],int nr)
 		}
 
 		system("cls");
-		chess_table_print(table);
 		min_nr = nr;
 
-		if (min_nr == n / 2 +1 && min_nr == n / 2)
+		if (min_nr == n / 2 + 1 || min_nr == n / 2)
 		{
+			chess_table_print(table);
 			if (lan)
 			{
 				std::cout << "Found an optimal solution!\n";
@@ -722,13 +726,20 @@ bool bt_dominating_queen_auto(int table[50][50],int nr)
 
 	}
 
+	int k = 1;
+
 	for (int i = 0; i < n; ++i)
 	{
-		for (int j = 0; j < n; ++j)
+		for (int j = 0; j < n; j++)
 		{
-
 			if (dominating_safe_queen(table, i, j))
 			{
+
+				if (nr >= n/2+1)
+				{
+					continue;
+				}
+
 				system("cls");
 
 				table[i][j] = 1;
@@ -742,14 +753,11 @@ bool bt_dominating_queen_auto(int table[50][50],int nr)
 
 				table[i][j] = 0;
 
-				make_attacked_table(table);
-
 				system("cls");
 
 				chess_table_print(table);
 
 				Sleep(interval);
-
 			}
 		}
 	}
@@ -763,15 +771,21 @@ void guider()
 	auto started = std::chrono::high_resolution_clock::now();
 	auto done = std::chrono::high_resolution_clock::now();
 
+	std::ofstream out("data.txt",std::ofstream::app);
+
 	system("cls");
 
 	if (lan)
 	{
+		std::cout << "\n\t Numbers above 10 might take longer!";
+		Sleep(40);
 		std::cout << "\n\t Please enter the chess tables dimension (NxN) : ";
 		std::cin >> n;
 	}
 	else
 	{
+		std::cout << "\n\t 10 folotti szamok tobb idot vehetnek igenybe!";
+		Sleep(40);
 		std::cout << "\n\t Kerem adja meg a sakk tabla meretet (NxN) : ";
 		std::cin >> n;
 	}
@@ -780,8 +794,7 @@ void guider()
 
 	if (!(n > 0 && m > 0) && !(n <= 50 && m <= 50))
 	{
-		std::cout << "Invalid data";
-		Sleep(500);
+		std::cout << "\n\tInvalid data";
 		goto Guider_End;
 	}
 
@@ -793,6 +806,15 @@ void guider()
 		{
 			table[i][j] = 0;
 		}
+	}
+
+	if (lan)
+	{
+		std::cout << "\n\tCompiling...";
+	}
+	else
+	{
+		std::cout << "\n\tKompilal...";
 	}
 
 	switch (mode)
@@ -876,11 +898,14 @@ void guider()
 				std::cout << "\nTeljes futasi ido : ";
 			}
 			std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(done - started).count()<<" ms\n";
+
+			out << 3 << ' ' << 1 << ' ' << n << ' ' << std::chrono::duration_cast<std::chrono::milliseconds>(done - started).count() << '\n';
+
 			btn = _getch();
 			break;
 
 		case 2: // Dominating Independent Queens
-
+			started = std::chrono::high_resolution_clock::now();
 			if (run_mode)
 			{
 				if (!bt_dominating_queen_man(table, 0))
@@ -909,11 +934,23 @@ void guider()
 					}
 				}
 			}
+			done = std::chrono::high_resolution_clock::now();
+			if (lan)
+			{
+				std::cout << "\nTotal running time : ";
+			}
+			else
+			{
+				std::cout << "\nTeljes futasi ido : ";
+			}
+			std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(done - started).count() << " ms\n";
+
+			out << 3 << ' ' << 2 << ' ' <<n<<' '<< std::chrono::duration_cast<std::chrono::milliseconds>(done - started).count() << '\n';
 
 			min_nr = 99;
 			btn = _getch();
-
 			break;
+
 		case 3:
 			break;
 		case 4:
@@ -926,6 +963,8 @@ void guider()
 	default :
 		break;
 	}
+
+	out.close();
 
 Guider_End:
 		
