@@ -823,11 +823,81 @@ int attacked_nr(int table[50][50], int s, int o)
 			}
 		}
 	}
-
 	return count;
 }
 
-void dominating_queens_man(int table[50][50]) // Greedy Queen Domintation, manual
+bool dominating_queens_auto_brute(int table[50][50],int count)
+{
+	bool found = false;
+	bool nul = false;
+
+	if (count == n)
+	{
+		return false;
+	}
+
+	while (!found)
+	{
+		make_attacked_table(table);
+
+		for (int i = 0; i < n; ++i)
+		{
+			for (int j = 0; j < n; ++j)
+			{
+				if (attacked_table[i][j] == 0)
+				{
+					nul = true;
+					break;
+				}
+			}
+		}
+
+		if (nul)
+		{
+			found = true;
+			break;
+		}
+
+		system("cls");
+
+		if (count == n / 2 + 1 || count == n / 2)
+		{
+			if (lan)
+			{
+				std::cout << "Found an optimal solution!\n";
+			}
+			else
+			{
+				std::cout << "Talalt egy optimalis megoldast!\n";
+			}
+		}
+
+		return true;
+
+	}
+
+	for (int i = 0; i < n; ++i)
+	{
+		for (int j = 0; j < n; ++j)
+		{
+			if (count > n / 2 + 1)
+			{
+				continue;
+			}
+
+			table[i][j] = 1;
+
+			if (dominating_queens_auto_brute(table, count + 1))
+				return true;
+
+			table[i][j] = 0;
+		}
+	}
+	
+	return false;
+}
+
+void dominating_queens_man(int table[50][50],int count) // Greedy Queen Domintation, manual
 {
 	make_attacked_table(table);
 
@@ -867,6 +937,12 @@ void dominating_queens_man(int table[50][50]) // Greedy Queen Domintation, manua
 		{
 			if (max < attacked_nr(attacked_table, i, j))
 			{
+
+				if (count > n / 2)
+				{
+					continue;
+				}
+
 				max = attacked_nr(attacked_table, i, j);
 				xcoord = i;
 				ycoord = j;
@@ -891,11 +967,12 @@ void dominating_queens_man(int table[50][50]) // Greedy Queen Domintation, manua
 
 	btn = _getch();
 
-	dominating_queens_man(table);
+	dominating_queens_man(table,count + 1);
 }
 
-void dominating_queens_auto(int table[50][50]) // Greedy Queen Domintation, automatic
+void dominating_queens_auto(int table[50][50],int count) // Greedy Queen Domintation, automatic
 {
+
 	make_attacked_table(table);
 
 	int nul = false;
@@ -934,7 +1011,7 @@ void dominating_queens_auto(int table[50][50]) // Greedy Queen Domintation, auto
 	}
 
 	//std::cout << "x : " << xcoord << " , " << " y : " << ycoord << '\n';
-	
+
 	table[xcoord][ycoord] = 1;
 
 	if (interval)
@@ -946,7 +1023,7 @@ void dominating_queens_auto(int table[50][50]) // Greedy Queen Domintation, auto
 		Sleep(interval);
 	}
 
-	dominating_queens_auto(table);
+	dominating_queens_auto(table, count + 1);
 }
 
 void guider()
@@ -1112,12 +1189,14 @@ void guider()
 		started = std::chrono::high_resolution_clock::now();
 		if (run_mode)
 		{
-			dominating_queens_man(table);
+			dominating_queens_man(table,0);
 			out << 1 << ' ';
 		}
 		else
 		{
-			dominating_queens_auto(table);
+			//dominating_queens_auto_brute(table,0);
+			dominating_queens_auto(table, 0);
+			chess_table_print(table);
 			out << 0 << ' ';
 		}
 
