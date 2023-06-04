@@ -10,7 +10,7 @@ bool run_mode;
 bool lan;
 bool intro;
 int interval;
-int mode;
+//int mode;
 int task;
 
 int n, m;
@@ -295,6 +295,11 @@ bool safe_queen(int table[50][50], int s, int o) // Backtracking N-Queen safety 
 
 bool safe_queen_man(int table[50][50], int s, int o) // Backtracking N-Queen safety checker, with text
 {
+	if (btn == 'a')
+	{
+		return false;
+	}
+
 	for (int i = 0; i < o; ++i)
 	{
 		if (table[s][i] == 1)
@@ -387,6 +392,7 @@ bool bt_queen_auto(int table[50][50], int j) // Backtracking N-Queen, automatic 
 {
 	if (j == n)
 	{
+		chess_table_print(table);
 		return true;
 	}
 
@@ -394,26 +400,34 @@ bool bt_queen_auto(int table[50][50], int j) // Backtracking N-Queen, automatic 
 	{
 		if (safe_queen(table, i, j))
 		{
-			system("cls");
+
+			if(interval)
+				system("cls");
 
 			table[i][j] = 1;
 			
 			//basic_print(table);
-			chess_table_print(table);
+			if (interval)
+			{
+				chess_table_print(table);
 
-			Sleep(interval);
+				Sleep(interval);
+			}
 
 			if (bt_queen_auto(table, j + 1))
 				return true;
 
 			table[i][j] = 0;
 
-			system("cls");
+			if (interval)
+			{
+				system("cls");
 
-			//basic_print(table);
-			chess_table_print(table);
+				//basic_print(table);
+				chess_table_print(table);
 
-			Sleep(interval);
+				Sleep(interval);
+			}
 		}
 	}
 
@@ -422,6 +436,11 @@ bool bt_queen_auto(int table[50][50], int j) // Backtracking N-Queen, automatic 
 
 bool bt_queen_man(int table[50][50], int j) // Backtracking N-Queen, manual iteration
 {
+	if (btn == 'a')
+	{
+		return false;
+	}
+
 	if (j == n)
 	{
 		return true;
@@ -467,12 +486,28 @@ bool bt_queen_man(int table[50][50], int j) // Backtracking N-Queen, manual iter
 			if (bt_queen_man(table, j + 1))
 				return true;
 
+			if (btn == 'a')
+				return false;
+
 			table[i][j] = 0;
 
 			system("cls");
 
 			//basic_print(table);
 			chess_table_print(table);
+
+			if (btn == 'a')
+			{
+				if (lan)
+				{
+					std::cout << "\nProgram aborted.";
+				}
+				else
+				{
+					std::cout << "\nProgram megallitva.";
+				}
+				return true;
+			}
 
 			if (lan)
 			{
@@ -491,19 +526,6 @@ bool bt_queen_man(int table[50][50], int j) // Backtracking N-Queen, manual iter
 
 			btn = _getch();
 
-			if (btn == 'a')
-			{
-				if (lan)
-				{
-					std::cout << "\nProgram aborted.";
-				}
-				else
-				{
-					std::cout << "\nProgram megallitva.";
-				}
-				return true;
-			}
-
 
 		}
 	}
@@ -511,21 +533,16 @@ bool bt_queen_man(int table[50][50], int j) // Backtracking N-Queen, manual iter
 	return false;
 }
 
-void dyn_queen_man()
-{
-
-}
-
-void dyn_queen_auto()
-{
-
-}
-
 int min_nr = 99;
 
 bool bt_dominating_queen_man(int table[50][50],int nr) // Backtracking Independent Dominating Queens Problem, manual
 {
-	if (nr >= min_nr && btn == 'a')
+	if (btn == 'a')
+	{
+		return false;
+	}
+
+	if (nr >= min_nr)
 	{
 		return true;
 	}
@@ -538,6 +555,7 @@ bool bt_dominating_queen_man(int table[50][50],int nr) // Backtracking Independe
 		make_attacked_table(table);
 
 		for (int i = 0; i < n; ++i)
+		{
 			for (int j = 0; j < n; ++j)
 			{
 				if (attacked_table[i][j] == 0)
@@ -546,6 +564,7 @@ bool bt_dominating_queen_man(int table[50][50],int nr) // Backtracking Independe
 					break;
 				}
 			}
+		}
 
 		if (nul)
 		{
@@ -570,10 +589,7 @@ bool bt_dominating_queen_man(int table[50][50],int nr) // Backtracking Independe
 		else
 		{
 			if (min_nr == n / 2 + 1 || min_nr == n / 2)
-			{
 				std::cout << "Talalt egy optimalis megoldast!\n";
-			}
-
 			else
 				std::cout << "Talalt egy parcialis megoldast!\n";
 		}
@@ -598,6 +614,8 @@ bool bt_dominating_queen_man(int table[50][50],int nr) // Backtracking Independe
 
 	}
 
+	bool temp = false;
+
 	for (int i = 0; i < n; ++i) 
 	{
 		for (int j = 0; j < n;++j)
@@ -605,13 +623,30 @@ bool bt_dominating_queen_man(int table[50][50],int nr) // Backtracking Independe
 
 			if (dominating_safe_queen(table, i, j))
 			{
-				system("cls");
 
+				if (nr > n / 2 + 1 && !temp)
+				{
+					if (lan)
+					{
+						std::cout << "Has placed more than n/2+1 pieces, backtracking.\n";
+					}
+					else
+					{
+						std::cout << "Mar tobb mint n/2+1 darabot tett le, backtrack-el.\n";
+					}
+					temp = true;
+					btn = _getch();
+					continue;
+				}
 
-				if (nr >= n / 2 + 1)
+				if (temp)
 				{
 					continue;
 				}
+
+				system("cls");
+
+				table[i][j] = 1;
 
 				chess_table_print(table);
 
@@ -627,11 +662,16 @@ bool bt_dominating_queen_man(int table[50][50],int nr) // Backtracking Independe
 					{
 						std::cout << "\nProgram megallitva.";
 					}
-					return true;
+					return false;
 				}
 
 				if (bt_dominating_queen_man(table, nr + 1))
 					return true;
+
+				if (btn == 'a')
+				{
+					return false;
+				}
 
 				table[i][j] = 0;
 
@@ -651,32 +691,17 @@ bool bt_dominating_queen_man(int table[50][50],int nr) // Backtracking Independe
 					{
 						std::cout << "\nProgram megallitva.";
 					}
-					return true;
+					return false;
 				}
 			}
 		}
 	}
 
 	return false;
-
-	/*
-	if (false)
-	{
-	Teleport:
-		j = n;
-		return true;
-	}
-	*/
 }
 
 bool bt_dominating_queen_auto(int table[50][50],int nr)
 {
-	/*
-	if (nr >= min_nr)
-	{
-		return true;
-	}
-	*/
 
 	bool found = false;
 	bool nul = false;
@@ -686,6 +711,7 @@ bool bt_dominating_queen_auto(int table[50][50],int nr)
 		make_attacked_table(table);
 
 		for (int i = 0; i < n; ++i)
+		{
 			for (int j = 0; j < n; ++j)
 			{
 				if (attacked_table[i][j] == 0)
@@ -694,6 +720,7 @@ bool bt_dominating_queen_auto(int table[50][50],int nr)
 					break;
 				}
 			}
+		}
 
 		if (nul)
 		{
@@ -735,29 +762,37 @@ bool bt_dominating_queen_auto(int table[50][50],int nr)
 			if (dominating_safe_queen(table, i, j))
 			{
 
-				if (nr >= n/2+1)
+				if (nr >= n / 2 + 1)
 				{
 					continue;
 				}
 
-				system("cls");
+
+				if (interval)
+					system("cls");
 
 				table[i][j] = 1;
 
-				chess_table_print(table);
-
-				Sleep(interval);
+				if (interval)
+				{
+					chess_table_print(table);
+				
+					Sleep(interval);
+				}
 
 				if (bt_dominating_queen_auto(table, nr + 1))
 					return true;
 
 				table[i][j] = 0;
 
-				system("cls");
+				if (interval)
+				{
+					system("cls");
 
-				chess_table_print(table);
+					chess_table_print(table);
 
-				Sleep(interval);
+					Sleep(interval);
+				}
 			}
 		}
 	}
@@ -808,6 +843,7 @@ void guider()
 		}
 	}
 
+	/*
 	if (lan)
 	{
 		std::cout << "\n\tCompiling...";
@@ -816,140 +852,112 @@ void guider()
 	{
 		std::cout << "\n\tKompilal...";
 	}
+	*/
 
-	switch (mode)
-	{
-	case 1: // Dynamic algorithms
-
-		switch (task)
-		{
-		case 1: // N-Queen
-			dyn_queen_auto();
-			btn = _getch();
-			break;
-		case 2:
-			break;
-		case 3:
-			break;
-		case 4:
-			break;
-		default:
-			break;
-		}
-		break;
-	
-	case 2: // Greedy algorithms
-
-		switch (task)
-		{
-		case 1: // N-Queen
-			break;
-		case 2:
-			break;
-		case 3:
-			break;
-		case 4:
-			break;
-		default:
-			break;
-		}
-		break;
-
-	case 3: // Backtracking algorithms
+	// Backtracking algorithms
 		
-		switch (task)
+	switch (task)
+	{
+	case 1: // N-Queen
+		started = std::chrono::high_resolution_clock::now();
+
+		if (run_mode)
 		{
-		case 1: // N-Queen
-			started = std::chrono::high_resolution_clock::now();
+			bt_queen_man(table, 0);
+			out << 1 << ' ';
+		}
+		else
+		{
+			bt_queen_auto(table, 0);
+			out << 0 << ' ';
+		}
 
-			if (run_mode)
+		/*
+
+		system("cls");
+
+		chess_table_print(table);
+
+		if (lan)
+		{
+			std::cout << "\nThe algorithm has finished.\n";
+		}
+		else
+		{
+			std::cout << "\nAz algoritmus veget ert.\n";
+		}
+
+		*/
+
+		done = std::chrono::high_resolution_clock::now();
+
+		system("cls");
+
+		chess_table_print(table);
+
+		if (lan)
+		{
+			std::cout << "\nTotal running time : ";
+		}
+		else
+		{
+			std::cout << "\nTeljes futasi ido : ";
+		}
+		std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(done - started).count()<<" ms\n";
+
+		out  << 1 << ' ' << n << ' ' << std::chrono::duration_cast<std::chrono::milliseconds>(done - started).count() << '\n';
+
+		btn = _getch();
+		break;
+
+	case 2: // Dominating Independent Queens
+		started = std::chrono::high_resolution_clock::now();
+		if (run_mode)
+		{
+			out << 1 << ' ';
+			if (!bt_dominating_queen_man(table, 0))
 			{
-				bt_queen_man(table, 0);
-			}
-			else
-			{
-				bt_queen_auto(table, 0);
-			}
-
-			/*
-
-			system("cls");
-
-			chess_table_print(table);
-
-			if (lan)
-			{
-				std::cout << "\nThe algorithm has finished.\n";
-			}
-			else
-			{
-				std::cout << "\nAz algoritmus veget ert.\n";
-			}
-
-			*/
-
-			done = std::chrono::high_resolution_clock::now();
-			if (lan)
-			{
-				std::cout << "\nTotal running time : ";
-			}
-			else
-			{
-				std::cout << "\nTeljes futasi ido : ";
-			}
-			std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(done - started).count()<<" ms\n";
-
-			out << 3 << ' ' << 1 << ' ' << n << ' ' << std::chrono::duration_cast<std::chrono::milliseconds>(done - started).count() << '\n';
-
-			btn = _getch();
-			break;
-
-		case 2: // Dominating Independent Queens
-			started = std::chrono::high_resolution_clock::now();
-			if (run_mode)
-			{
-				if (!bt_dominating_queen_man(table, 0))
+				if (lan)
 				{
-					if (lan)
-					{
-						std::cout << "No solution has been found.\n";
-					}
-					else
-					{
-						std::cout << "Nem talalt megoldast.\n";
-					}
+					//std::cout << "No solution has been found.\n";
+				}
+				else
+				{
+					//std::cout << "Nem talalt megoldast.\n";
 				}
 			}
-			else
+		}
+		else
+		{
+			out << 0 << ' ';
+			if (!bt_dominating_queen_auto(table, 0))
 			{
-				if (!bt_dominating_queen_auto(table, 0))
+				if (lan)
 				{
-					if (lan)
-					{
-						std::cout << "No solution has been found.\n";
-					}
-					else
-					{
-						std::cout << "Nem talalt megoldast.\n";
-					}
+					//std::cout << "No solution has been found.\n";
+				}
+				else
+				{
+					//std::cout << "Nem talalt megoldast.\n";
 				}
 			}
-			done = std::chrono::high_resolution_clock::now();
-			if (lan)
-			{
-				std::cout << "\nTotal running time : ";
-			}
-			else
-			{
-				std::cout << "\nTeljes futasi ido : ";
-			}
-			std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(done - started).count() << " ms\n";
+		}
+		done = std::chrono::high_resolution_clock::now();
+		if (lan)
+		{
+			std::cout << "\nTotal running time : ";
+		}
+		else
+		{
+			std::cout << "\nTeljes futasi ido : ";
+		}
+		std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(done - started).count() << " ms\n";
 
-			out << 3 << ' ' << 2 << ' ' <<n<<' '<< std::chrono::duration_cast<std::chrono::milliseconds>(done - started).count() << '\n';
+		out << 2 << ' ' <<n<<' '<< std::chrono::duration_cast<std::chrono::milliseconds>(done - started).count() << '\n';
 
-			min_nr = 99;
-			btn = _getch();
-			break;
+		min_nr = 99;
+		btn = _getch();
+		break;
 
 		case 3:
 			break;
@@ -957,11 +965,6 @@ void guider()
 			break;
 		default:
 			break;
-		}
-		break;
-
-	default :
-		break;
 	}
 
 	out.close();
@@ -1036,6 +1039,8 @@ Chess_Menu_Mid:
 
 	system("cls");
 
+	/*
+
 	if (lan)
 	{
 		std::cout << "\n\tSelect a programming approach!";
@@ -1075,6 +1080,8 @@ Chess_Menu_Mid:
 		goto Chess_Menu_Mid;
 		break;
 	}
+
+	*/
 
 	guider();
 
@@ -1269,7 +1276,7 @@ void notes_menu()
 		Sleep(40);
 		std::cout << "\n\tThe app was made for displaying and solving different mathematical chess problems\n\tcomparing these in terms of running time and optimization.\n";
 		Sleep(40);
-		std::cout << "\n\tStep-by-step mode : Each time a button is pressed, the algorithm advances one step. \n\tWhile running, we can stop the program by pressing the 'a' button.\n\tHighly recommended running mode!\n";
+		std::cout << "\n\tStep-by-step mode : Each time a button is pressed, the algorithm advances one step. \n\tWhile running, the program can be aborted by pressing the 'a' button.\n\tHighly recommended running mode!\n";
 		Sleep(40);
 		std::cout << "\n\tAutomatic mode : The algorithm runs without any user input.";
 		Sleep(40);
@@ -1287,7 +1294,7 @@ void notes_menu()
 		Sleep(40);
 		std::cout << "\n\tAz alkalmazast kulonbozo sakkos matematikai problemak megjelenitesere es megoldasara keszult\n\tilletve ezek osszehasonlitasara ido es optimalizalas szempontjabol.\n";
 		Sleep(40);
-		std::cout << "\n\tLepesrol-lepesre iteralas : Minden alkalommal amikor megnyomjunk egy gombot, egy lepest tesz az algoritmus. \n\tFutas kozben az 'a' gomb megnyomasaval megallithajuk a programot.\n\tAjanlott futtatasi modszer!\n";
+		std::cout << "\n\tLepesrol-lepesre iteralas : Minden alkalommal amikor megnyomjunk egy gombot, egy lepest tesz az algoritmus. \n\tFutas kozben az 'a' gomb megnyomasaval megszakithatjuk a programot.\n\tAjanlott futtatasi modszer!\n";
 		Sleep(40);
 		std::cout << "\n\tAutomatikus mod : Az algoritmus felhasznaloi bemenetek nelkul lepked.";
 		Sleep(40);
