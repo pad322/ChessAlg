@@ -70,11 +70,11 @@ void make_attacked_table(int table[50][50])
 				{
 					attacked_table[i][j] = 2; // 2 jelzi ha kiralyno van az adott kockan
 				}
-				else if ((xcoord[l] == i || ycoord[l] == j) && table[i][j] != 2)
+				else if ((xcoord[l] == i || ycoord[l] == j) && table[i][j] != 1)
 				{
 					attacked_table[i][j] = 1; // 1 jelzi ha tamadva van a pont
 				}
-				else if (std::abs((xcoord[l]) - i) == std::abs((ycoord[l]) - j) && table[i][j] != 2)
+				else if (std::abs((xcoord[l]) - i) == std::abs((ycoord[l]) - j) && table[i][j] != 1)
 				{
 					attacked_table[i][j] = 1;
 				}
@@ -800,6 +800,79 @@ bool bt_dominating_queen_auto(int table[50][50],int nr)
 	return false;
 }
 
+int attacked_nr(int table[50][50], int s, int o)
+{
+	int count = 0;
+	for (int i = 0; i < n; ++i)
+	{
+		for (int j = 0; j < n; ++j)
+		{
+			if (i == s && table[i][j] == 0)
+			{
+				count++;
+			}
+
+			else if (j == o && table[i][j] == 0)
+			{
+				count++;
+			}
+
+			else if (std::abs(s - i) == std::abs(o - j) && table[i][j] == 0)
+			{
+				count++;
+			}
+		}
+	}
+
+	return count;
+}
+
+void dominating_queens_auto(int table[50][50])
+{
+	make_attacked_table(table);
+
+	int nul = false;
+
+	for (int i = 0; i < n; ++i)
+	{
+		for (int j = 0; j < n; ++j)
+		{
+			if (attacked_table[i][j] == 0)
+			{
+				nul = true;
+				break;
+			}
+		}
+	}
+
+	if (!nul)
+	{
+		return;
+	}
+
+	int xcoord, ycoord;
+	int max = -1;
+
+	for (int i = 0; i < n; ++i)
+	{
+		for (int j = 0; j < n; ++j)
+		{
+			if (max < attacked_nr(attacked_table, i, j))
+			{
+				max = attacked_nr(attacked_table, i, j);
+				xcoord = i;
+				ycoord = j;
+			}
+		}
+	}
+
+	//std::cout << "x : " << xcoord << " , " << " y : " << ycoord << '\n';
+	
+	table[xcoord][ycoord] = 1;
+
+	dominating_queens_auto(table);
+}
+
 void guider()
 {
 
@@ -960,6 +1033,11 @@ void guider()
 		break;
 
 		case 3:
+			dominating_queens_auto(table);
+
+			chess_table_print(table);
+
+			btn = _getch();
 			break;
 		case 4:
 			break;
