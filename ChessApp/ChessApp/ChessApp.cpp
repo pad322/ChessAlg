@@ -827,7 +827,74 @@ int attacked_nr(int table[50][50], int s, int o)
 	return count;
 }
 
-void dominating_queens_auto(int table[50][50])
+void dominating_queens_man(int table[50][50]) // Greedy Queen Domintation, manual
+{
+	make_attacked_table(table);
+
+	int nul = false;
+
+	for (int i = 0; i < n; ++i)
+	{
+		for (int j = 0; j < n; ++j)
+		{
+			if (attacked_table[i][j] == 0)
+			{
+				nul = true;
+				break;
+			}
+		}
+	}
+
+	if (!nul)
+	{
+		if (lan)
+		{
+			std::cout << "The table has no empty spaces left.\n";
+		}
+		else
+		{
+			std::cout << "Nem maradt a tablan tobb ures mezo.\n";
+		}
+		return;
+	}
+
+	int xcoord, ycoord;
+	int max = -1;
+
+	for (int i = 0; i < n; ++i)
+	{
+		for (int j = 0; j < n; ++j)
+		{
+			if (max < attacked_nr(attacked_table, i, j))
+			{
+				max = attacked_nr(attacked_table, i, j);
+				xcoord = i;
+				ycoord = j;
+			}
+		}
+	}
+
+	table[xcoord][ycoord] = 1;
+
+	system("cls");
+
+	chess_table_print(table);
+
+	if (lan)
+	{
+		std::cout << "[" << xcoord << "] , [" << ycoord << "] point has the most attacked spaces. Placing queen.\n";
+	}
+	else
+	{
+		std::cout << "[" << xcoord << "] , [" << ycoord << "] pont tamadja a legtobb mezot. Kiralynot helyezunk erre.\n";
+	}
+
+	btn = _getch();
+
+	dominating_queens_man(table);
+}
+
+void dominating_queens_auto(int table[50][50]) // Greedy Queen Domintation, automatic
 {
 	make_attacked_table(table);
 
@@ -869,6 +936,15 @@ void dominating_queens_auto(int table[50][50])
 	//std::cout << "x : " << xcoord << " , " << " y : " << ycoord << '\n';
 	
 	table[xcoord][ycoord] = 1;
+
+	if (interval)
+	{
+		system("cls");
+		
+		chess_table_print(table);
+		
+		Sleep(interval);
+	}
 
 	dominating_queens_auto(table);
 }
@@ -1032,17 +1108,38 @@ void guider()
 		btn = _getch();
 		break;
 
-		case 3:
+	case 3:
+		started = std::chrono::high_resolution_clock::now();
+		if (run_mode)
+		{
+			dominating_queens_man(table);
+			out << 1 << ' ';
+		}
+		else
+		{
 			dominating_queens_auto(table);
+			out << 0 << ' ';
+		}
 
-			chess_table_print(table);
+		done = std::chrono::high_resolution_clock::now();
+		if (lan)
+		{
+			std::cout << "\nTotal running time : ";
+		}
+		else
+		{
+			std::cout << "\nTeljes futasi ido : ";
+		}
+		std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(done - started).count() << " ms\n";
 
-			btn = _getch();
-			break;
-		case 4:
-			break;
-		default:
-			break;
+		out << 3 << ' ' << n << ' ' << std::chrono::duration_cast<std::chrono::milliseconds>(done - started).count() << '\n';
+
+		btn = _getch();
+		break;
+	case 4:
+		break;
+	default:
+		break;
 	}
 
 	out.close();
@@ -1068,9 +1165,9 @@ Chess_Menu:
 		Sleep(40);
 		std::cout << "\n\t2. Queens independent dominating";
 		Sleep(40);
-		std::cout << "\n\t3. Queen on horseback dominating";
+		std::cout << "\n\t3. Queens dominating";
 		Sleep(40);
-		std::cout << "\n\t4. Independent rooks";
+		std::cout << "\n\t4. Knights tour";
 		Sleep(40);
 		std::cout << " \n\t5. Back to Main Menu";
 	}
@@ -1082,9 +1179,9 @@ Chess_Menu:
 		Sleep(40);
 		std::cout << "\n\t2. Kiralyno kulonallo lefedes";
 		Sleep(40);
-		std::cout << "\n\t3. Kiralyno lohaton lefedes";
+		std::cout << "\n\t3. Kiralyno lefedes";
 		Sleep(40);
-		std::cout << "\n\t4. Kulonallo bastyak";
+		std::cout << "\n\t4. Huszar turne";
 		Sleep(40);
 		std::cout << " \n\t5. Vissza a Fo Menube";
 	}
