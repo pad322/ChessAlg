@@ -800,7 +800,7 @@ bool bt_dominating_queen_auto(int table[50][50],int nr)
 	return false;
 }
 
-int attacked_nr(int table[50][50], int s, int o)
+int attacked_nr(int table[50][50], int s, int o) // Hany nem lefedett pontot tamad minden pont egy tablan
 {
 	int count = 0;
 	for (int i = 0; i < n; ++i)
@@ -826,7 +826,7 @@ int attacked_nr(int table[50][50], int s, int o)
 	return count;
 }
 
-bool dominating_queens_auto_brute(int table[50][50],int count)
+bool dominating_queens_auto_brute(int table[50][50],int count) // Brute-Force Queens dominating
 {
 	bool found = false;
 	bool nul = false;
@@ -1026,6 +1026,222 @@ void dominating_queens_auto(int table[50][50],int count) // Greedy Queen Dominta
 	dominating_queens_auto(table, count + 1);
 }
 
+int knight_attacked_spots(int table[50][50], int x, int y) // Hany pontot tamad egy huszar
+{
+
+	// Az adatok amiket hozza adunk a koordinatakhoz, hogy a huszar lepeseit megtegyek.
+	int x_add[9] = { -1,1,2,2,-1,1,-2,-2 };
+	int y_add[9] = { 2,2,1,-1,-2,-2,-1,1 };  
+
+	int count = 0;
+
+	for (int k = 0; k < 8; ++k)
+	{
+		if (x + x_add[k] >= 0 && x + x_add[k] < n)
+		{
+			if (y + y_add[k] >= 0 && y + y_add[k] < n && table[x + x_add[k]][y + y_add[k]] == 0)
+			{
+				//table[x + x_add[k]][y + y_add[k]] = 1;
+				//std::cout << x << " - " << x_add[k] << " = " << x + x_add[k] << '\n';
+				//std::cout << y << " - " << y_add[k] << " = " << y + y_add[k] << '\n';
+				count++;
+			}
+		}
+	}
+
+	return count;
+}
+
+void knight_tour(int table[50][50], int x, int y)
+{
+	table[x][y] = 3;
+
+	std::cout  << x << " , " << y << '\n';
+
+	int min = 99;
+
+	int x_new;
+	int y_new;
+
+	int x_add[9] = { -1,1,-2,-2, -1,1,2,2 };
+	int y_add[9] = { -2,-2,-1,1, 2,2,-1,1 };
+
+	/*if (x % n == 0)
+	{
+		int x_add[9] = { -1,1,-2,-2, -1,1,2,2 };
+		int y_add[9] = { -2,-2,-1,1, 2,2,1,-1 };
+	}*/
+
+	for (int k = 0; k < 8; ++k)
+	{
+		if (x + x_add[k] >= 0 && x + x_add[k] < n && table[x + x_add[k]][y + y_add[k]]!= 3)
+		{
+			if (y + y_add[k] >= 0 && y + y_add[k] < n && table[x + x_add[k]][y + y_add[k]] != 3)
+			{
+				table[x + x_add[k]][y + y_add[k]] = 1;
+				int temp = knight_attacked_spots(table, x + x_add[k], y + y_add[k]);
+
+				if (temp < min)
+				{
+					min = temp;
+					x_new = x + x_add[k];
+					y_new = y + y_add[k];
+				}
+			}
+		}
+	}
+
+	basic_print(table);
+
+	btn = _getch();
+
+	system("cls");
+
+	knight_tour(table, x_new, y_new);
+	
+}
+
+bool improved_knights_tour_man(int table[50][50], int x, int y, int count)
+{
+	bool found = false;
+
+	if (count == n * n - 1)
+	{
+		system("cls");
+
+		//table[x][y] = 1;
+
+		basic_print(table);
+
+		if (lan)
+		{
+			std::cout << "\nEvery point has been visited.\n";
+		}
+		else
+		{
+			std::cout << "\nMinden pont meglatogatva.\n";
+		}
+
+		btn = _getch();
+
+		return true;
+	}
+
+	while (!found)
+	{
+		for(int i=0;i<n;++i)
+			for(int j=0;j<n;++j)
+				if (table[i][j] == 0)
+				{
+					found = true;
+				}
+
+		if (!found)
+		{
+			basic_print(table);
+
+			btn = _getch();
+
+			return true;
+		}
+		else
+			break;
+	}
+	
+	int min = 99;
+
+
+	int x_add[9] = { -1,1,-2,-2, -1,1,2,2 };
+	int y_add[9] = { -2,-2,-1,1, 2,2,-1,1 };
+
+
+	for (int l = 0; l < 8; ++l)
+	{
+		if (x + x_add[l] >= 0 && x + x_add[l] < n && table[x + x_add[l]][y + y_add[l]] == 0)
+		{
+			if (y + y_add[l] >= 0 && y + y_add[l] < n && table[x + x_add[l]][y + y_add[l]] == 0)
+			{
+
+				int temp = knight_attacked_spots(table, x + x_add[l], y + y_add[l]);
+
+				///std::cout << "Minimum : " << temp << '\n';
+
+				//table[x + x_add[l]][y + y_add[l]] = 1;
+
+				///std::cout << x + x_add[l] << " , " << y + y_add[l] << '\n';
+
+				//basic_print(table);
+
+				//std::cout << temp << '\n';
+
+				if (temp < min)
+				{
+					min = temp;
+					//std::cout << min << '\n';
+				}
+			}
+		}
+	}
+
+	std::cout << min << '\n';
+	//btn = _getch();
+
+	for (int k = 0; k < 8; ++k)
+	{
+		if (x + x_add[k] >= 0 && x + x_add[k] < n && table[x + x_add[k]][y + y_add[k]] == 0)
+		{
+			if (y + y_add[k] >= 0 && y + y_add[k] < n && table[x + x_add[k]][y + y_add[k]] == 0)
+			{
+				if (knight_attacked_spots(table, x + x_add[k], y + y_add[k]) == min)
+				{
+					system("cls");
+					//std::cout << min << '\n';
+
+					table[x + x_add[k]][y + y_add[k]] = 1;
+
+					//std::cout << x + x_add[k] << ' ' << y + y_add[k] << '\n';
+
+					basic_print(table);
+
+					if (lan)
+					{
+						std::cout << "\n The knight steps from [" << x << "] , [" << y << "] point to " << x + x_add[k] << " , " << y + y_add[k] << " point.\n";
+					}
+					else
+					{
+						std::cout << "\n A huszar [" << x << "] , [" << y << "] pontrol lep a(z) " << x + x_add[k] << " , " << y + y_add[k] << " pontra.\n";
+					}
+
+					btn = _getch();
+
+					if (improved_knights_tour_man(table, x + x_add[k], y + y_add[k], count + 1))
+						return true;
+
+					system("cls");
+
+					table[x+x_add[k]][y+y_add[k]] = 0;
+
+					basic_print(table);
+
+					if (lan)
+					{
+						std::cout << "\n [" << x + x_add[k] << "] , [" << y + y_add[k] << "] removed. Backtracking.\n";
+					}
+					{
+						std::cout << "\n [" << x + x_add[k] << "] , [" << y + y_add[k] << "] torolve. Backtrack-el.\n";
+					}
+
+					btn = _getch();
+				}
+			}
+		}
+	}
+
+	return false;
+
+}
+
+
 void guider()
 {
 
@@ -1216,6 +1432,45 @@ void guider()
 		btn = _getch();
 		break;
 	case 4:
+
+		int a, b;
+
+		if (lan)
+		{
+			std::cout << "Please give the starting position (x,y) : ";
+		}
+		else
+		{
+			std::cout << "Adja meg a kezdeti poziciot (x,y) : ";
+		}
+
+		std::cin >> a >> b;
+
+		table[a][b] = 1;
+
+
+		if (!improved_knights_tour_man(table, a, b, 0))
+		{
+
+			system("cls");
+
+			basic_print(table);
+
+			if (lan)
+			{
+				std::cout << "All points cannot be visited.\n";
+			}
+			else
+			{
+				std::cout << "Minden pontot nem tud meglatogatni.\n";
+			}
+			btn = _getch();
+		}
+		else
+		{
+
+		}
+
 		break;
 	default:
 		break;
