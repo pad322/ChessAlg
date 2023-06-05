@@ -37,8 +37,8 @@ void basic_print(int table[50][50])
 
 int attacked_table[50][50];
 
-int xcoord[50] = { 0 };
-int ycoord[50] = { 0 };
+int xcoord[100] = { 0 };
+int ycoord[100] = { 0 };
 
 void make_attacked_table(int table[50][50])
 {
@@ -441,15 +441,18 @@ bool safe_queen_man(int table[50][50], int s, int o) // Backtracking N-Queen saf
 	{
 		if (table[s][i] == 1)
 		{
+
+			char y_char = 'A' + i;
+
 			if (lan)
 			{
-				std::cout << "The queen placed on [" << s << "] , [" << i << "]";
+				std::cout << "The queen placed on " << y_char << " " << s + 1;
 				Sleep(40);
 				std::cout<< "dominates her row.\n";
 			}
 			else
 			{
-				std::cout << "[" << s << "] , [" << i << "] kiralyno miatt";
+				std::cout << y_char << " " << s + 1  <<" kiralyno miatt";
 				Sleep(40);
 				std::cout << " a sora le van fedve.\n";
 			}
@@ -467,16 +470,19 @@ bool safe_queen_man(int table[50][50], int s, int o) // Backtracking N-Queen saf
 	{
 		if (table[i][j] == 1)
 		{
+
+			char y_char = 'A' + j;
+
 			if (lan)
 			{
-				std::cout << "The queen placed on [" << i << "] , [" << j << "]";
+				std::cout << "The queen placed on " << y_char << " " << i + 1;
 				Sleep(40);
 				std::cout << " attacks her lower right diagonal.\n";
 				Sleep(40);
 			}
 			else
 			{
-				std::cout << "[" << i << "] , [" << j << "]-re helyezett kiralyno";
+				std::cout << y_char << " " << i + 1 << "-re helyezett kiralyno";
 				Sleep(40);
 				std::cout << " lefedi a jobb also atlojat.\n";
 				Sleep(40);
@@ -498,16 +504,18 @@ bool safe_queen_man(int table[50][50], int s, int o) // Backtracking N-Queen saf
 	{
 		if (table[i][j] == 1)
 		{
+			char y_char = 'A' + j;
+
 			if (lan)
 			{
-				std::cout << "The queen placed on [" << i << "] , [" << j << "]";
+				std::cout << "The queen placed on " << y_char << " " << i + 1;
 				Sleep(40);
 				std::cout << " attacks her upper right diagonal.\n";
 				Sleep(40);
 			}
 			else
 			{
-				std::cout << "[" << i << "] , [" << j << "]-re helyezett kiralyno";
+				std::cout << y_char << " " << i + 1 << "-re helyezett kiralyno";
 				Sleep(40);
 				std::cout << " lefedi a jobb felso atlojat.\n";
 				Sleep(40);
@@ -595,15 +603,17 @@ bool bt_queen_man(int table[50][50], int j) // Backtracking N-Queen, manual iter
 			//basic_print(table);
 			chess_table_print(table);
 
+			char y_char = 'A' + j;
+
 			if (lan)
 			{
 				Sleep(40);
-				std::cout << "\nPlaced a queen on the [" << i << "] , [" << j << "] coordinates.\n";
+				std::cout << "\nPlaced a queen on the " << y_char << " " << i+1 << " coordinates.\n";
 			}
 			else
 			{
 				Sleep(40);
-				std::cout << "\nElhelyezett egy kiralynot a(z) [" << i << "] , [" << j << "] koordinatakra.\n";
+				std::cout << "\nElhelyezett egy kiralynot a(z) " << y_char << " " << i+1 << " koordinatakra.\n";
 			}
 
 			btn = _getch();
@@ -647,17 +657,19 @@ bool bt_queen_man(int table[50][50], int j) // Backtracking N-Queen, manual iter
 				return true;
 			}
 
+			y_char = 'A' + j;
+
 			if (lan)
 			{
 				Sleep(40);
-				std::cout << "\nRemoved [" << i << "] , [" << j << "]\n";
+				std::cout << "\nRemoved " << y_char << " " << i+1 << "\n";
 				Sleep(40);
 				std::cout << "Backtracking to a previous state.\n";
 			}
 			else
 			{
 				Sleep(40);
-				std::cout << "\nTorolve lett [" << i << "] , [" << j << "]\n";
+				std::cout << "\nTorolve lett " << y_char << " " << i+1 << "\n";
 				Sleep(40);
 				std::cout << "Backtrack - el, vagyis visszafele lepked egy elozo allapothoz.\n";
 			}
@@ -1100,13 +1112,15 @@ void dominating_queens_man(int table[50][50],int count) // Greedy Queen Domintat
 
 	chess_table_print(table);
 
+	char y_char = 'A' + ycoord;
+
 	if (lan)
 	{
-		std::cout << "[" << xcoord << "] , [" << ycoord << "] point has the most attacked spaces. Placing queen.\n";
+		std::cout  << y_char << " " << xcoord+1 << " point has the most attacked spaces. Placing queen.\n";
 	}
 	else
 	{
-		std::cout << "[" << xcoord << "] , [" << ycoord << "] pont tamadja a legtobb mezot. Kiralynot helyezunk erre.\n";
+		std::cout << y_char  << " " << xcoord+1 << " pont tamadja a legtobb mezot. Kiralynot helyezunk erre.\n";
 	}
 
 	btn = _getch();
@@ -1199,7 +1213,7 @@ int knight_attacked_spots(int table[50][50], int x, int y) // Hany pontot tamad 
 	return count;
 }
 
-void knight_tour(int table[50][50], int x, int y) // nem jo
+void knight_tour(int table[50][50], int x, int y) // Helytelen
 {
 	table[x][y] = 3;
 
@@ -1361,6 +1375,19 @@ bool improved_knights_tour_man(int table[50][50], int x, int y, int count)
 {
 	bool found = false;
 
+	if (btn == 'a')
+	{
+		if (lan)
+		{
+			std::cout << "Program aborted.\n";
+		}
+		else
+		{
+			std::cout << "Program megallitva.\n";
+		}
+		return false;
+	}
+
 	if (count == n * n - 1)
 	{
 		system("cls");
@@ -1459,19 +1486,40 @@ bool improved_knights_tour_man(int table[50][50], int x, int y, int count)
 
 					knight_print(table);
 
+					char y_char = 'A' + y;
+					char new_y_char = 'A' + y + y_add[k];
+
 					if (lan)
 					{
-						std::cout << "\nThe knight steps from [" << x << "] , [" << y << "] point to [" << x + x_add[k] << "] , [" << y + y_add[k] << "] point.\n";
+						std::cout << "\nThe knight steps from " << y_char << " " << x+1 << " point to " << new_y_char << " " << x + x_add[k] + 1 << " point.\n";
 					}
 					else
 					{
-						std::cout << "\nA huszar [" << x << "] , [" << y << "] pontrol lep a(z) " << x + x_add[k] << "] , [" << y + y_add[k] << "] pontra.\n";
+						std::cout << "\nA huszar " << y_char << " " << x+1 << " pontrol lep a(z) " << new_y_char << " " << x + x_add[k] +1 << " pontra.\n";
 					}
 
 					btn = _getch();
 
+					if (btn == 'a')
+					{
+						if (lan)
+						{
+							std::cout << "Program aborted.\n";
+						}
+						else
+						{
+							std::cout << "Program megallitva.\n";
+						}
+						return false;
+					}
+
 					if (improved_knights_tour_man(table, x + x_add[k], y + y_add[k], count + 1))
 						return true;
+
+					if (btn == 'a')
+					{
+						return false;
+					}
 
 					system("cls");
 
@@ -1479,15 +1527,30 @@ bool improved_knights_tour_man(int table[50][50], int x, int y, int count)
 
 					knight_print(table);
 
+					new_y_char = 'A' + y + y_add[k];
+
 					if (lan)
 					{
-						std::cout << "\n [" << x + x_add[k] << "] , [" << y + y_add[k] << "] removed. Backtracking.\n";
+						std::cout << "\n" << new_y_char << " " << x + x_add[k] + 1 << " removed. Backtracking.\n";
 					}
 					{
-						std::cout << "\n [" << x + x_add[k] << "] , [" << y + y_add[k] << "] torolve. Backtrack-el.\n";
+						std::cout << "\n" << new_y_char << " " << x + x_add[k] + 1 << " torolve. Backtrack-el.\n";
 					}
 
 					btn = _getch();
+
+					if (btn == 'a')
+					{
+						if (lan)
+						{
+							std::cout << "Program aborted.\n";
+						}
+						else
+						{
+							std::cout << "Program megallitva.\n";
+						}
+						return false;
+					}
 				}
 			}
 		}
@@ -1717,54 +1780,38 @@ void guider()
 
 			if (!improved_knights_tour_man(table, a, b, 0))
 			{
-
-				system("cls");
-
-				knight_print(table);
-
-				done = std::chrono::high_resolution_clock::now();
-
-				out << 1 << ' ';
-
 				if (lan)
 				{
-					std::cout << "\nAll points cannot be visited.\n";
+					std::cout << "The board cannot be fully visited.\n";
 				}
 				else
 				{
-					std::cout << "\nMinden pontot nem tud meglatogatni.\n";
+					std::cout << "A tablat nem lehet teljesen bejarni.\n";
 				}
 			}
-			else
-			{
-				done = std::chrono::high_resolution_clock::now();
-			}
+
+			done = std::chrono::high_resolution_clock::now();
+
+			out << 1 << ' ';
 		}
 		else
 		{
+			
 			if (!improved_knights_tour_auto(table, a, b, 0))
 			{
-				system("cls");
-
-				knight_print(table);
-
-				done = std::chrono::high_resolution_clock::now();
-
-				out << 0 << ' ';
-
 				if (lan)
 				{
-					std::cout << "\nAll points cannot be visited.\n";
+					std::cout << "The board cannot be fully visited.\n";
 				}
 				else
 				{
-					std::cout << "\nMinden pontot nem tud meglatogatni.\n";
+					std::cout << "A tablat nem lehet teljesen bejarni.\n";
 				}
 			}
-			else
-			{
-				done = std::chrono::high_resolution_clock::now();
-			}
+
+			done = std::chrono::high_resolution_clock::now();
+
+			out << 1 << ' ';
 		}
 
 		if (lan)
