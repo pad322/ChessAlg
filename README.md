@@ -1,8 +1,12 @@
 # Chess_Problem_Solver
 Török Csongor - Államvizsga dolgozat 2023
 
-# To Do lista
-  - Sakkos problémák implementálása 2 módszerrel
+# Dióhéjban
+  Az alkalmazás 3.5 különböző sakkos matematikai problémákra keres megoldást, mindezt interaktívan, lépésenként mutatva az algoritmusok által választott döntéseket.
+
+
+# To Do
+  - Újabb sakkos problémák implementálása
   - Időzítő implementálása
   - Legjobb idő mentése metódusok/problémák mellé
   - Új felhasználói felület készítése
