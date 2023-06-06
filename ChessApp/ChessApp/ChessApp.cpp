@@ -83,6 +83,49 @@ void make_attacked_table(int table[50][50])
 	}
 }
 
+void make_rook_attacked_table(int table[50][50])
+{
+	int k = 0;
+
+	for (int i = 0; i < n; ++i)
+	{
+		for (int j = 0; j < n; ++j)
+		{
+			if (table[i][j] == 1)
+			{
+				xcoord[k] = i;
+				ycoord[k] = j;
+				//std::cout << xcoord[k] << ' ' << ycoord[k] << '\n';
+				k++;
+			}
+		}
+	}
+
+	for (int i = 0; i < n; ++i)
+	{
+		for (int j = 0; j < n; ++j)
+		{
+			attacked_table[i][j] = 0;
+
+			for (int l = 0; l < k; ++l)
+			{
+				if (i == xcoord[l] && j == ycoord[l])
+				{
+					attacked_table[i][j] = 2;
+				}
+				else if (i == xcoord[l])
+				{
+					attacked_table[i][j] = 1;
+				}
+				else if (j == ycoord[l])
+				{
+					attacked_table[i][j] = 1;
+				}
+			}
+		}
+	}
+}
+
 void make_knight_attacked_table(int table[50][50])
 {
 	int k = 0;
@@ -129,7 +172,47 @@ void make_knight_attacked_table(int table[50][50])
 	}
 }
 
-void chess_table_print(int table[50][50]) // detailed chess table printer
+void make_bishop_attacked_table(int table[50][50])
+{
+	int k = 0;
+
+	for (int i = 0; i < n; ++i)
+	{
+		for (int j = 0; j < n; ++j)
+		{
+			if (table[i][j] == 1)
+			{
+				xcoord[k] = i;
+				ycoord[k] = j;
+				//std::cout << xcoord[k] << ' ' << ycoord[k] << '\n';
+				k++;
+			}
+		}
+	}
+
+	for (int i = 0; i < n; ++i)
+	{
+		for (int j = 0; j < n; ++j)
+		{
+			attacked_table[i][j] = 0;
+
+			for (int l = 0; l < k; ++l)
+			{
+				if (i == xcoord[l] && j == ycoord[l])
+				{
+					attacked_table[i][j] = 2;
+				}
+				else if (std::abs(i - xcoord[l]) == std::abs(j - ycoord[l]))
+				{
+					attacked_table[i][j] = 1;
+				}
+			}
+		}
+	}
+
+}
+
+void queen_printer(int table[50][50]) // detailed chess table printer
 {
 	char abc = 'A';
 
@@ -220,7 +303,7 @@ void chess_table_print(int table[50][50]) // detailed chess table printer
 	}
 }
 
-void knight_print(int table[50][50])
+void knight_printer(int table[50][50])
 {
 	char abc = 'A';
 
@@ -310,6 +393,282 @@ void knight_print(int table[50][50])
 		}
 	}
 }
+
+void knight_tour_print(int table[50][50])
+{
+	char abc = 'A';
+
+	bool larger = false;
+	int temp = 0;
+	int number = 1;
+
+	if (n < 39)
+	{
+		int rows = 0;
+
+		while (rows < n)
+		{
+			if (abc > 'Z' && !larger)
+			{
+				abc = 'a';
+				larger = true;
+			}
+			std::cout << "   " << abc << "  ";
+			abc++;
+			rows++;
+		}
+
+		std::cout << "\n";
+
+		rows = 0;
+
+		while (rows < n)
+		{
+			std::cout << "------";
+			rows++;
+		}
+
+		std::cout << "-\n";
+
+		for (int i = 0; i < n; ++i)
+		{
+			while (temp < 3)
+			{
+				for (int j = 0; j < n; ++j)
+				{
+					if (table[i][j] == 0)
+					{
+						std::cout << "|     ";
+					}
+					if (table[i][j] >= 1)
+					{
+						if (temp != 1)
+						{
+							std::cout << "|     ";
+						}
+						else
+						{
+							if (table[i][j] / 10 == 0)
+								std::cout << "|  " << table[i][j] << "  ";
+							else if (table[i][j] / 10 < 10)
+								std::cout << "| " << table[i][j] << "  ";
+							else
+								std::cout << "| " << table[i][j]  << " ";
+						}
+					}
+				}
+
+				std::cout << '|';
+
+				if (temp == 1)
+				{
+					std::cout << "   " << number;
+					number++;
+				}
+
+				temp++;
+
+				std::cout << '\n';
+			}
+			temp = 0;
+
+			rows = 0;
+			while (rows < n)
+			{
+				std::cout << "------";
+				rows++;
+			}
+
+			std::cout << "-\n";
+		}
+	}
+}
+
+void rook_printer(int table[50][50])
+{
+	char abc = 'A';
+
+	bool larger = false;
+	int temp = 0;
+	int number = 1;
+
+	make_rook_attacked_table(table);
+
+	if (n < 39)
+	{
+		int rows = 0;
+
+		while (rows < n)
+		{
+			if (abc > 'Z' && !larger)
+			{
+				abc = 'a';
+				larger = true;
+			}
+			std::cout << "   " << abc << "  ";
+			abc++;
+			rows++;
+		}
+
+		std::cout << "\n";
+
+		rows = 0;
+
+		while (rows < n)
+		{
+			std::cout << "------";
+			rows++;
+		}
+
+		std::cout << "-\n";
+
+		for (int i = 0; i < n; ++i)
+		{
+			while (temp < 3)
+			{
+				for (int j = 0; j < n; ++j)
+				{
+					if (attacked_table[i][j] == 0)
+					{
+						std::cout << "|     ";
+					}
+					if (attacked_table[i][j] == 1)
+					{
+						std::cout << "|#####";
+					}
+					if (attacked_table[i][j] == 2)
+					{
+						if (temp != 1)
+						{
+							std::cout << "|     ";
+						}
+						else
+						{
+							std::cout << "|  T  ";
+						}
+					}
+				}
+
+				std::cout << '|';
+
+				if (temp == 1)
+				{
+					std::cout << "   " << number;
+					number++;
+				}
+
+				temp++;
+
+				std::cout << '\n';
+			}
+			temp = 0;
+
+			rows = 0;
+			while (rows < n)
+			{
+				std::cout << "------";
+				rows++;
+			}
+
+			std::cout << "-\n";
+		}
+	}
+}
+
+void bishop_printer(int table[50][50])
+{
+	char abc = 'A';
+
+	bool larger = false;
+	int temp = 0;
+	int number = 1;
+
+	make_bishop_attacked_table(table);
+
+	if (n < 39)
+	{
+		int rows = 0;
+
+		while (rows < n)
+		{
+			if (abc > 'Z' && !larger)
+			{
+				abc = 'a';
+				larger = true;
+			}
+			std::cout << "   " << abc << "  ";
+			abc++;
+			rows++;
+		}
+
+		std::cout << "\n";
+
+		rows = 0;
+
+		while (rows < n)
+		{
+			std::cout << "------";
+			rows++;
+		}
+
+		std::cout << "-\n";
+
+		for (int i = 0; i < n; ++i)
+		{
+			while (temp < 3)
+			{
+				for (int j = 0; j < n; ++j)
+				{
+					if (attacked_table[i][j] == 0)
+					{
+						std::cout << "|     ";
+					}
+					if (attacked_table[i][j] == 1)
+					{
+						std::cout << "|#####";
+					}
+					if (attacked_table[i][j] == 2)
+					{
+						if (temp != 1)
+						{
+							std::cout << "|     ";
+						}
+						else
+						{
+							std::cout << "|  B  ";
+						}
+					}
+				}
+
+				std::cout << '|';
+
+				if (temp == 1)
+				{
+					std::cout << "   " << number;
+					number++;
+				}
+
+				temp++;
+
+				std::cout << '\n';
+			}
+			temp = 0;
+
+			rows = 0;
+			while (rows < n)
+			{
+				std::cout << "------";
+				rows++;
+			}
+
+			std::cout << "-\n";
+		}
+	}
+}
+
+///////////////////////
+/////////////////////// Algorithms for the problems
+///////////////////////
 
 bool dominating_safe_queen(int table[50][50],int s, int o) // Backtracking Dominating Queens safety checker
 {
@@ -538,7 +897,7 @@ bool bt_queen_auto(int table[50][50], int j) // Backtracking N-Queen, automatic 
 	if (j == n)
 	{
 		//basic_print(table);
-		chess_table_print(table);
+		queen_printer(table);
 		return true;
 	}
 
@@ -555,7 +914,7 @@ bool bt_queen_auto(int table[50][50], int j) // Backtracking N-Queen, automatic 
 			//basic_print(table);
 			if (interval)
 			{
-				chess_table_print(table);
+				queen_printer(table);
 
 				Sleep(interval);
 			}
@@ -570,7 +929,7 @@ bool bt_queen_auto(int table[50][50], int j) // Backtracking N-Queen, automatic 
 				system("cls");
 
 				//basic_print(table);
-				chess_table_print(table);
+				queen_printer(table);
 
 				Sleep(interval);
 			}
@@ -601,7 +960,7 @@ bool bt_queen_man(int table[50][50], int j) // Backtracking N-Queen, manual iter
 			table[i][j] = 1;
 			//Sleep(50);
 			//basic_print(table);
-			chess_table_print(table);
+			queen_printer(table);
 
 			char y_char = 'A' + j;
 
@@ -642,7 +1001,7 @@ bool bt_queen_man(int table[50][50], int j) // Backtracking N-Queen, manual iter
 			system("cls");
 
 			//basic_print(table);
-			chess_table_print(table);
+			queen_printer(table);
 
 			if (btn == 'a')
 			{
@@ -727,7 +1086,7 @@ bool bt_dominating_queen_man(int table[50][50],int nr) // Backtracking Independe
 		}
 
 		system("cls");
-		chess_table_print(table);
+		queen_printer(table);
 		min_nr = nr;
 		if (lan)
 		{
@@ -798,7 +1157,7 @@ bool bt_dominating_queen_man(int table[50][50],int nr) // Backtracking Independe
 
 				table[i][j] = 1;
 
-				chess_table_print(table);
+				queen_printer(table);
 
 				btn = _getch();
 
@@ -827,7 +1186,7 @@ bool bt_dominating_queen_man(int table[50][50],int nr) // Backtracking Independe
 
 				system("cls");
 
-				chess_table_print(table);
+				queen_printer(table);
 
 				btn = _getch();
 
@@ -887,7 +1246,7 @@ bool bt_dominating_queen_auto(int table[50][50],int nr) // Backtracking Dominati
 
 		if (min_nr == n / 2 + 1 || min_nr == n / 2)
 		{
-			chess_table_print(table);
+			queen_printer(table);
 			if (lan)
 			{
 				std::cout << "Found an optimal solution!\n";
@@ -925,7 +1284,7 @@ bool bt_dominating_queen_auto(int table[50][50],int nr) // Backtracking Dominati
 
 				if (interval)
 				{
-					chess_table_print(table);
+					queen_printer(table);
 				
 					Sleep(interval);
 				}
@@ -939,7 +1298,7 @@ bool bt_dominating_queen_auto(int table[50][50],int nr) // Backtracking Dominati
 				{
 					system("cls");
 
-					chess_table_print(table);
+					queen_printer(table);
 
 					Sleep(interval);
 				}
@@ -1070,7 +1429,7 @@ void dominating_queens_man(int table[50][50],int count) // Greedy Queen Domintat
 
 		system("cls");
 
-		chess_table_print(table);
+		queen_printer(table);
 
 		if (lan)
 		{
@@ -1110,7 +1469,7 @@ void dominating_queens_man(int table[50][50],int count) // Greedy Queen Domintat
 
 	system("cls");
 
-	chess_table_print(table);
+	queen_printer(table);
 
 	char y_char = 'A' + ycoord;
 
@@ -1179,7 +1538,7 @@ void dominating_queens_auto(int table[50][50],int count) // Greedy Queen Dominta
 	{
 		system("cls");
 		
-		chess_table_print(table);
+		queen_printer(table);
 		
 		Sleep(interval);
 	}
@@ -1252,7 +1611,7 @@ void knight_tour(int table[50][50], int x, int y) // Helytelen
 		}
 	}
 
-	basic_print(table);
+	//basic_print(table);
 
 	btn = _getch();
 
@@ -1272,7 +1631,7 @@ bool improved_knights_tour_auto(int table[50][50], int x, int y, int count) // K
 
 		//table[x][y] = 1;
 
-		knight_print(table);
+		knight_tour_print(table);
 
 		if (lan)
 		{
@@ -1282,8 +1641,6 @@ bool improved_knights_tour_auto(int table[50][50], int x, int y, int count) // K
 		{
 			std::cout << "\nMinden pont meglatogatva.\n";
 		}
-
-		btn = _getch();
 
 		return true;
 	}
@@ -1338,27 +1695,31 @@ bool improved_knights_tour_auto(int table[50][50], int x, int y, int count) // K
 				if (knight_attacked_spots(table, x + x_add[k], y + y_add[k]) == min)
 				{
 
-					table[x + x_add[k]][y + y_add[k]] = 1;
+					count++;
+
+					table[x + x_add[k]][y + y_add[k]] = count + 1;
 
 					if (interval)
 					{
 						system("cls");
 
-						knight_print(table);
+						knight_tour_print(table);
 
 						Sleep(interval);
 					}
 
-					if (improved_knights_tour_auto(table, x + x_add[k], y + y_add[k], count + 1))
+					if (improved_knights_tour_auto(table, x + x_add[k], y + y_add[k], count))
 						return true;
+
+					count--;
+
+					table[x + x_add[k]][y + y_add[k]] = 0;
 
 					if (interval)
 					{
 						system("cls");
 
-						table[x + x_add[k]][y + y_add[k]] = 0;
-
-						knight_print(table);
+						knight_tour_print(table);
 
 						Sleep(interval);
 					}
@@ -1394,7 +1755,7 @@ bool improved_knights_tour_man(int table[50][50], int x, int y, int count)
 
 		//table[x][y] = 1;
 
-		knight_print(table);
+		knight_tour_print(table);
 
 		if (lan)
 		{
@@ -1404,8 +1765,6 @@ bool improved_knights_tour_man(int table[50][50], int x, int y, int count)
 		{
 			std::cout << "\nMinden pont meglatogatva.\n";
 		}
-
-		btn = _getch();
 
 		return true;
 	}
@@ -1421,7 +1780,7 @@ bool improved_knights_tour_man(int table[50][50], int x, int y, int count)
 
 		if (!found)
 		{
-			knight_print(table);
+			knight_tour_print(table);
 
 			btn = _getch();
 
@@ -1480,11 +1839,14 @@ bool improved_knights_tour_man(int table[50][50], int x, int y, int count)
 					system("cls");
 					//std::cout << min << '\n';
 
-					table[x + x_add[k]][y + y_add[k]] = 1;
+					table[x + x_add[k]][y + y_add[k]] = count+2;
+
+
+					count++;
 
 					//std::cout << x + x_add[k] << ' ' << y + y_add[k] << '\n';
 
-					knight_print(table);
+					knight_tour_print(table);
 
 					char y_char = 'A' + y;
 					char new_y_char = 'A' + y + y_add[k];
@@ -1513,7 +1875,7 @@ bool improved_knights_tour_man(int table[50][50], int x, int y, int count)
 						return false;
 					}
 
-					if (improved_knights_tour_man(table, x + x_add[k], y + y_add[k], count + 1))
+					if (improved_knights_tour_man(table, x + x_add[k], y + y_add[k], count))
 						return true;
 
 					if (btn == 'a')
@@ -1523,9 +1885,11 @@ bool improved_knights_tour_man(int table[50][50], int x, int y, int count)
 
 					system("cls");
 
+					count--;
+
 					table[x+x_add[k]][y+y_add[k]] = 0;
 
-					knight_print(table);
+					knight_tour_print(table);
 
 					new_y_char = 'A' + y + y_add[k];
 
@@ -1559,6 +1923,140 @@ bool improved_knights_tour_man(int table[50][50], int x, int y, int count)
 	return false;
 
 }
+
+bool empty_row(int table[50][50],int row)
+{
+	for (int i = 0; i < n; ++i)
+	{
+		if (table[row][i] == 1)
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+bool empty_column(int table[50][50], int col)
+{
+	for (int i = 0; i < n; ++i)
+	{
+		if (table[i][col] == 1)
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+bool rook_domination_man(int table[50][50]) // Chaotic Rook domination, manual
+{
+	srand(time(NULL));
+
+	int count = 0;
+
+	while (count != n)
+	{
+		for (int i = 0; i < n; ++i)
+		{
+			if (empty_row(table, i))
+			{
+				int temp = rand() % n;
+
+				if (empty_column(table, temp))
+				{
+					system("cls");
+					table[i][temp] = 1;
+					count++;
+					rook_printer(table);
+					std::cout << '\n';
+					btn = _getch();
+				}
+			}
+		}
+	}
+	return true;
+}
+
+bool rook_domination_auto(int table[50][50]) // Chaotic Rook domination, manual
+{
+	srand(time(NULL));
+
+	int count = 0;
+
+	while (count != n)
+	{
+		for (int i = 0; i < n; ++i)
+		{
+			if (empty_row(table, i))
+			{
+				int temp = rand() % n;
+
+				if (empty_column(table, temp))
+				{
+					table[i][temp] = 1;
+					count++;
+
+					if(interval)
+					{
+						system("cls");
+						rook_printer(table);
+						std::cout << '\n';
+						Sleep(interval);
+					}
+				}
+			}
+		}
+	}
+	return true;
+}
+
+bool bishop_domination_man(int table[50][50]) // Bishop domination, manual
+{
+	for (int i = 0; i < n; ++i)
+	{
+		if(n%2==0)
+			table[i][n / 2-1] = 1;
+		else
+			table[i][n / 2] = 1;
+		system("cls");
+		bishop_printer(table);
+
+		if (lan)
+		{
+			std::cout << "In every case, the most optimal solution is placing n bishops in the center column.\n";
+		}
+		else
+		{
+			std::cout << "Barmilyen esetben, a legoptimalisabb megoldas a kozepso oszlopba n darab futo helyezese.\n";
+		}
+
+		btn = _getch();
+	}
+
+	return true;
+}
+
+bool bishop_domination_auto(int table[50][50]) // Bishop domination, automatic
+{
+	for (int i = 0; i < n; ++i)
+	{
+		if (n % 2 == 0)
+			table[i][n / 2 - 1] = 1;
+		else
+			table[i][n / 2] = 1;
+		if (interval)
+		{
+			system("cls");
+			bishop_printer(table);
+			Sleep(interval);
+		}
+	}
+
+	return true;
+}
+
 
 
 void guider()
@@ -1638,7 +2136,7 @@ void guider()
 
 		system("cls");
 
-		chess_table_print(table);
+		queen_printer(table);
 
 		if (lan)
 		{
@@ -1655,7 +2153,7 @@ void guider()
 
 		system("cls");
 
-		chess_table_print(table);
+		queen_printer(table);
 
 		if (lan)
 		{
@@ -1732,7 +2230,7 @@ void guider()
 		{
 			//dominating_queens_auto_brute(table,0);
 			dominating_queens_auto(table, 0);
-			chess_table_print(table);
+			queen_printer(table);
 			out << 0 << ' ';
 		}
 
@@ -1829,6 +2327,62 @@ void guider()
 		btn = _getch();
 
 		break;
+	case 5:  // Rook domination
+		started = std::chrono::high_resolution_clock::now();
+		if (run_mode)
+		{
+			out << 1 << ' ';
+			rook_domination_man(table);
+			done = std::chrono::high_resolution_clock::now();
+		}
+		else
+		{
+			out << 0 << ' ';
+			rook_domination_auto(table);
+			done = std::chrono::high_resolution_clock::now();
+		}
+		if (lan)
+		{
+			std::cout << "\nTotal running time : ";
+		}
+		else
+		{
+			std::cout << "\nTeljes futasi ido : ";
+		}
+		std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(done - started).count() << " ms\n";
+
+		out << 5 << ' ' << n << ' ' << std::chrono::duration_cast<std::chrono::milliseconds>(done - started).count() << '\n';
+
+		btn = _getch();
+		break;
+	case 6:  // Bishop domination
+		started = std::chrono::high_resolution_clock::now();
+		if (run_mode)
+		{
+			out << 1 << ' ';
+			bishop_domination_man(table);
+			done = std::chrono::high_resolution_clock::now();
+		}
+		else
+		{
+			out << 0 << ' ';
+			bishop_domination_auto(table);
+			done = std::chrono::high_resolution_clock::now();
+		}
+		if (lan)
+		{
+			std::cout << "\nTotal running time : ";
+		}
+		else
+		{
+			std::cout << "\nTeljes futasi ido : ";
+		}
+		std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(done - started).count() << " ms\n";
+
+		out << 6 << ' ' << n << ' ' << std::chrono::duration_cast<std::chrono::milliseconds>(done - started).count() << '\n';
+
+		btn = _getch();
+		break;
 	default:
 		break;
 	}
@@ -1860,7 +2414,11 @@ Chess_Menu:
 		Sleep(40);
 		std::cout << "\n\t4. Knights tour";
 		Sleep(40);
-		std::cout << " \n\t5. Back to Main Menu";
+		std::cout << "\n\t5. Rook dominating";
+		Sleep(40);
+		std::cout << "\n\t6. Bishop dominating";
+		Sleep(40);
+		std::cout << " \n\t7. Back to Main Menu";
 	}
 	else
 	{
@@ -1874,7 +2432,11 @@ Chess_Menu:
 		Sleep(40);
 		std::cout << "\n\t4. Huszar turne";
 		Sleep(40);
-		std::cout << " \n\t5. Vissza a Fo Menube";
+		std::cout << "\n\t5. Bastya lefedes";
+		Sleep(40);
+		std::cout << "\n\t6. Futar lefedes";
+		Sleep(40);
+		std::cout << " \n\t7. Vissza a Fo Menube";
 	}
 
 	btn = _getch();
@@ -1894,6 +2456,12 @@ Chess_Menu:
 		task = 4;
 		break;
 	case '5':
+		task = 5;
+		break;
+	case '6':
+		task = 6;
+		break;
+	case '7':
 		goto Chess_Menu_End;
 		break;
 	default :
