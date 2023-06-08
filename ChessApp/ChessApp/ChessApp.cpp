@@ -897,6 +897,8 @@ bool bt_queen_auto(int table[50][50], int j) // Backtracking N-Queen, automatic 
 	if (j == n)
 	{
 		//basic_print(table);
+		if(interval)
+			system("cls");
 		queen_printer(table);
 		return true;
 	}
@@ -1309,7 +1311,7 @@ bool bt_dominating_queen_auto(int table[50][50],int nr) // Backtracking Dominati
 	return false;
 }
 
-int attacked_nr(int table[50][50], int s, int o) // Hany nem lefedett pontot tamad minden pont egy tablan
+int attacked_nr(int table[50][50], int s, int o) // Hany nem lefedett pontot tamad minden pont egy tablan egy kiralyno
 {
 	int count = 0;
 	for (int i = 0; i < n; ++i)
@@ -1408,7 +1410,21 @@ bool dominating_queens_auto_brute(int table[50][50],int count) // Brute-Force Qu
 
 void dominating_queens_man(int table[50][50],int count) // Greedy Queen Domintation, manual
 {
-	make_attacked_table(table);
+	//make_attacked_table(table);
+
+
+	if (btn == 'a')
+	{
+		if (lan)
+		{
+			std::cout << "Program aborted.\n";
+		}
+		else
+		{
+			std::cout << "Program megallitva.\n";
+		}
+		return;
+	}
 
 	int nul = false;
 
@@ -1483,6 +1499,20 @@ void dominating_queens_man(int table[50][50],int count) // Greedy Queen Domintat
 	}
 
 	btn = _getch();
+
+
+	if (btn == 'a')
+	{
+		if (lan)
+		{
+			std::cout << "Program aborted.\n";
+		}
+		else
+		{
+			std::cout << "Program megallitva.\n";
+		}
+		return;
+	}
 
 	dominating_queens_man(table,count + 1);
 }
@@ -1560,6 +1590,32 @@ int knight_attacked_spots(int table[50][50], int x, int y) // Hany pontot tamad 
 		if (x + x_add[k] >= 0 && x + x_add[k] < n)
 		{
 			if (y + y_add[k] >= 0 && y + y_add[k] < n && table[x + x_add[k]][y + y_add[k]] == 0)
+			{
+				//table[x + x_add[k]][y + y_add[k]] = 1;
+				//std::cout << x << " - " << x_add[k] << " = " << x + x_add[k] << '\n';
+				//std::cout << y << " - " << y_add[k] << " = " << y + y_add[k] << '\n';
+				count++;
+			}
+		}
+	}
+
+	return count;
+}
+
+int knight_attacked_spots_plus(int table[50][50], int x, int y) // Hany pontot tamad amikor a tabla le van fedve mar
+{
+	make_knight_attacked_table(table);
+
+	int x_add[9] = { -1,1,2,2,-1,1,-2,-2 };
+	int y_add[9] = { 2,2,1,-1,-2,-2,-1,1 };
+
+	int count = 0;
+
+	for (int k = 0; k < 8; ++k)
+	{
+		if (x + x_add[k] >= 0 && x + x_add[k] < n)
+		{
+			if (y + y_add[k] >= 0 && y + y_add[k] < n && attacked_table[x + x_add[k]][y + y_add[k]] == 0)
 			{
 				//table[x + x_add[k]][y + y_add[k]] = 1;
 				//std::cout << x << " - " << x_add[k] << " = " << x + x_add[k] << '\n';
@@ -1897,6 +1953,7 @@ bool improved_knights_tour_man(int table[50][50], int x, int y, int count)
 					{
 						std::cout << "\n" << new_y_char << " " << x + x_add[k] + 1 << " removed. Backtracking.\n";
 					}
+					else
 					{
 						std::cout << "\n" << new_y_char << " " << x + x_add[k] + 1 << " torolve. Backtrack-el.\n";
 					}
@@ -1972,6 +2029,19 @@ bool rook_domination_man(int table[50][50]) // Chaotic Rook domination, manual
 					rook_printer(table);
 					std::cout << '\n';
 					btn = _getch();
+
+					if (btn == 'a')
+					{
+						if (lan)
+						{
+							std::cout << "Program aborted.\n";
+						}
+						else
+						{
+							std::cout << "Program megallitva.\n";
+						}
+						return false;
+					}
 				}
 			}
 		}
@@ -2033,6 +2103,19 @@ bool bishop_domination_man(int table[50][50]) // Bishop domination, manual
 		}
 
 		btn = _getch();
+
+		if (btn == 'a')
+		{
+			if (lan)
+			{
+				std::cout << "Program aborted.\n";
+			}
+			else
+			{
+				std::cout << "Program megallitva.\n";
+			}
+			return false;
+		}
 	}
 
 	return true;
@@ -2057,39 +2140,445 @@ bool bishop_domination_auto(int table[50][50]) // Bishop domination, automatic
 	return true;
 }
 
+bool knight_domination_checker(int table[50][50])
+{
+
+	make_knight_attacked_table(table);
+
+	for (int i = 0; i < n; ++i)
+	{
+		for (int j = 0; j < n; ++j)
+		{
+			if (attacked_table[i][j] == 0)
+				return false;
+		}
+	}
+
+	return true;
+}
+
+bool knight_domination_man(int table[50][50], int x, int y)
+{
+	bool not_done = false;
+
+	if (n <= 3)
+	{
+		knight_printer(table);
+
+		if (lan)
+		{
+			std::cout << "\nCannot be completed.";
+		}
+		else
+		{
+			std::cout << "\nNem megoldhato.";
+		}
+
+		return false;
+	}
+
+	int max = -1;
+	int max_max = -1;
+
+	for (int i = 0; i < n; ++i)
+	{
+		for (int j = 0; j < n; ++j)
+		{
+			int temp = knight_attacked_spots(table, i, j);
+			if (temp > max_max)
+			{
+				max = max_max;
+				max_max = temp;
+			}
+		}
+	}
+
+	int new_table[50][50];
+
+	for (int i = 0; i < n; ++i)
+	{
+		for (int j = 0; j < n; ++j)
+		{
+			new_table[i][j] = 0;
+		}
+	}
+
+	if (n == 4)
+	{
+		for (int i = 0; i < n; ++i)
+		{
+			for (int j = 0; j < n; ++j)
+			{
+				int temp = knight_attacked_spots(new_table, i, j);
+				if (temp == max_max)
+				{
+					table[i][j] = 1;
+				}
+			}
+		}
+
+		knight_printer(table);
+
+		return true;
+
+	}
+	else
+	{
+		bool done = false;
+
+		int top_left_x;
+		int top_left_y;
+		int bottom_right_x;
+		int bottom_right_y;
+
+		for (int i = 0; i < n / 2 + 1; ++i)  // Bal felso negyed
+		{
+			for (int j = 0; j < n / 2 + 1; ++j)
+			{
+				int temp = knight_attacked_spots(new_table, j, i);
+				if (temp == max)
+				{
+					table[j][i] = 1;
+					top_left_x = j;
+					top_left_y = i;
+					done = true;
+					break;
+				}
+			}
+			if (done)
+				break;
+		}
+
+		done = false;
+
+		for (int i = n; i > n / 2 -1; --i) // Bal also negyed
+		{
+			for (int j = 0; j < n / 2 + 1; ++j)
+			{
+				int temp = knight_attacked_spots(new_table, i, j);
+				if (temp == max)
+				{
+					table[i][j] = 1;
+					done = true;
+					break;
+				}
+			}
+			if (done)
+				break;
+		}
+
+		done = false;
+
+		for (int i = n; i > n / 2 - 1; --i) // Jobb also negyed
+		{
+			for (int j = n; j > n / 2 - 1; --j)
+			{
+				int temp = knight_attacked_spots(new_table, j, i);
+				if (temp == max)
+				{
+					table[j][i] = 1;
+					bottom_right_x = j;
+					bottom_right_y = i;
+					done = true;
+					break;
+				}
+			}
+			if (done)
+				break;
+		}
+
+		done = false;
+
+		for (int i = 0; i < n / 2 + 1; ++i) // Jobb felso negyed
+		{
+			for (int j = n; j > n / 2 - 1; --j)
+			{
+				int temp = knight_attacked_spots(new_table, i, j);
+				if (temp == max)
+				{
+					table[i][j] = 1;
+					done = true;
+					break;
+				}
+			}
+			if (done)
+				break;
+		}
+
+		/////
+
+		table[top_left_x][top_left_y+1] = 1;
+
+		table[bottom_right_x][bottom_right_y-1] = 1;
+
+		table[top_left_x][bottom_right_y - 1] = 1;
+
+		table[bottom_right_x][top_left_y+1] = 1;
+
+		if (knight_domination_checker(table))
+		{
+			knight_printer(table);
+			return true;
+		}
+		else
+		{
+
+			Redo:
+
+			max_max = -1;
+
+			int maxok[5]={-1};
+
+			done = false;
+
+			int i, j;
+
+			for (int i = 0; i < n; ++i)
+			{
+				for (int j = 0; j < n; ++j)
+				{
+					new_table[i][j] = knight_attacked_spots_plus(table, i, j);
+				}
+			}
+
+			if (n % 2 == 1)
+			{
+				i = n / 2;
+				j = n / 2 - 1;
+			}
+			else
+			{
+				i = n / 2 -  1;
+				j = n / 2 - 1;
+			}
+
+			for (int ii = i; ii >= 0; --ii) // Bal felso negyed max
+			{
+				for (int jj = j; jj >= 0; --jj)
+				{
+					std::cout << new_table[ii][jj] << ' ';
+					if (new_table[ii][jj] > max_max)
+					{
+						//std::cout << "Bal felso" << '\n';
+						max_max = new_table[ii][jj];
+					}
+				}
+				std::cout << '\n';
+			}
+
+			maxok[0] = max_max;
+
+
+			for (int ii=i; ii >= 0; --ii) // Bal felso negyed
+			{
+				for (int jj=j; jj >= 0; --jj)
+				{
+					if (new_table[ii][jj] == max_max)
+					{
+						//std::cout << "Bal felso" << '\n';
+						table[ii][jj] = 1;
+						done = true;
+						break;
+					}
+				}
+				//std::cout << '\n';
+				if (done)
+					break;
+			}
+			
+
+			done = false;
+
+			if (n % 2 == 1)
+			{
+				i = n / 2+1;
+				j = n / 2;
+			}
+			else
+			{
+				i = n / 2;
+				j = n / 2 - 1;
+			}
+
+			max_max = -1;
+
+			for (int ii = i; ii < n; ++ii) // Bal also negyed max
+			{
+				for (int jj = j; jj >= 0; --jj)
+				{
+					if (new_table[ii][jj] > max_max)
+					{
+						//std::cout << "Bal also";
+						max_max = new_table[ii][jj];
+					}
+				}
+			}
+
+			maxok[1] = max_max;
+			
+			for (int ii = i; ii < n; ++ii) // Bal also negyed
+			{
+				for (int jj = j; jj >= 0; --jj)
+				{
+					if (new_table[ii][jj] == max_max)
+					{
+						//std::cout << "Bal also";
+						table[ii][jj] = 1;
+						done = true;
+						break;
+					}
+				}
+				if (done)
+					break;
+			}
+	
+			done = false;
+
+			if (n % 2 == 1)
+			{
+				i = n / 2;
+				j = n / 2+1 ;
+			}
+			else
+			{
+				i = n / 2;
+				j = n / 2;
+			}
+
+			max_max = -1;
+
+			for (int ii = i; ii < n; ++ii) // Jobb also negyed 
+			{
+				for (int jj = j; jj < n; ++jj)
+				{
+					if (new_table[ii][jj] > max_max)
+					{
+						max_max = new_table[ii][jj];
+					}
+				}
+			}
+
+			maxok[2] = max_max;
+
+			for (int ii=i; ii < n; ++ii) // Jobb also negyed 
+			{
+				for (int jj = j; jj < n; ++jj)
+				{
+					if (new_table[ii][jj] == max_max)
+					{
+						//std::cout << "Jobb also" << '\n';
+						table[ii][jj] = 1;
+						done = true;
+						break;
+					}
+				}
+				if (done)
+					break;
+			}
+
+
+			done = false;
+
+			if (n % 2 == 1)
+			{
+				i = n / 2 -1;
+				j = n / 2;
+			}
+			else
+			{
+				i = n / 2 - 1;
+				j = n / 2;
+			}
+
+			max_max = -1;
+
+			for (int ii = i; ii >= 0; --ii) // Jobb felso negyed max
+			{
+				for (int jj = j; jj < n; ++jj)
+				{
+					if (new_table[ii][jj] > max_max)
+					{
+						max_max= new_table[ii][jj];
+					}
+				}
+			}
+
+			maxok[3] = max_max;
+
+			for (int ii=i; ii >= 0; --ii) // Jobb felso negyed
+			{
+				for (int jj=j; jj < n; ++jj)
+				{
+					if (new_table[ii][jj] == max_max)
+					{
+						///std::cout << "Jobb felso" << '\n';
+						table[ii][jj] = 1;
+						done = true;
+						break;
+					}
+				}
+				if (done)
+					break;
+			}
+
+
+			if (knight_domination_checker(table))
+			{
+				knight_printer(table);
+				return true;
+			}
+			else
+			{
+				goto Redo;
+				//knight_printer(table);
+				//return true;
+			}
+		}
+
+	}
+}
+
 
 
 void guider()
 {
+
+	Guider_Begin:
 
 	auto started = std::chrono::high_resolution_clock::now();
 	auto done = std::chrono::high_resolution_clock::now();
 
 	std::ofstream out("data.txt",std::ofstream::app);
 
+	int a_int = 0;
+
 	system("cls");
 
 	if (lan)
 	{
-		std::cout << "\n\t Numbers above 10 might take longer!";
-		Sleep(40);
-		std::cout << "\n\t Please enter the chess tables dimension (NxN) : ";
+		//std::cout << "\n\t Numbers above 10 might take longer!";
+		//Sleep(40);
+		std::cout << "\n\t Please enter the chess tables dimension (NxN, N<38) : ";
 		std::cin >> n;
 	}
 	else
 	{
-		std::cout << "\n\t 10 folotti szamok tobb idot vehetnek igenybe!";
-		Sleep(40);
-		std::cout << "\n\t Kerem adja meg a sakk tabla meretet (NxN) : ";
+		//std::cout << "\n\t 10 folotti szamok tobb idot vehetnek igenybe!";
+		//Sleep(40);
+		std::cout << "\n\t Kerem adja meg a sakk tabla meretet (NxN, N<38) : ";
 		std::cin >> n;
 	}
 
 	system("cls");
 
-	if (!(n > 0 && m > 0) && !(n <= 50 && m <= 50))
+	if ((n < 0) || (n > 38))
 	{
-		std::cout << "\n\tInvalid data";
-		goto Guider_End;
+		if (lan)
+			std::cout << "\n\tInvalid data!";
+		else
+			std::cout << "\n\tHelytelen adatok!";
+		Sleep(1000);
+		goto Guider_Begin;
 	}
 
 	int table[50][50];
@@ -2151,9 +2640,9 @@ void guider()
 
 		done = std::chrono::high_resolution_clock::now();
 
-		system("cls");
+		//system("cls");
 
-		queen_printer(table);
+		//queen_printer(table);
 
 		if (lan)
 		{
@@ -2219,7 +2708,7 @@ void guider()
 		btn = _getch();
 		break;
 
-	case 3:
+	case 3: // Dominating Queen (Greedy)
 		started = std::chrono::high_resolution_clock::now();
 		if (run_mode)
 		{
@@ -2249,22 +2738,61 @@ void guider()
 
 		btn = _getch();
 		break;
-	case 4:
+	case 4: // Knights tour
 
-		int a, b;
+		Printing:
+
+		char a;
+		int b;
+
+		system("cls");
+
+		knight_tour_print(table);
 
 		if (lan)
 		{
-			std::cout << "Please give the starting position (x,y) : ";
+			std::cout << "\nPlease give the starting position (For example A 1) : ";
 		}
 		else
 		{
-			std::cout << "Adja meg a kezdeti poziciot (x,y) : ";
+			std::cout << "\nAdja meg a kezdeti poziciot (Pld. A 1) : ";
 		}
 
 		std::cin >> a >> b;
 
-		table[a][b] = 1;
+		a_int = a - 65;
+
+		if ((a_int < 0 || a_int > n))
+		{
+			if (lan)
+			{
+				std::cout << "Incorrect data.\n";
+			}
+			else
+			{
+				std::cout << "Helytelen adatok.\n";
+			}
+			btn = _getch();
+			goto Printing;
+		}
+
+		if ((b-1 < 0 || b-1 > n))
+		{
+			if (lan)
+			{
+				std::cout << "Incorrect data.\n";
+			}
+			else
+			{
+				std::cout << "Helytelen adatok.\n";
+			}
+			btn = _getch();
+			goto Printing;
+		}
+
+		//std::cout << a_int << '\n';
+
+		table[b-1][a_int] = 1;
 
 		//make_knight_attacked_table(table);
 
@@ -2276,15 +2804,15 @@ void guider()
 		if (run_mode)
 		{
 
-			if (!improved_knights_tour_man(table, a, b, 0))
+			if (!improved_knights_tour_man(table, b-1, a_int, 0))
 			{
 				if (lan)
 				{
-					std::cout << "The board cannot be fully visited.\n";
+					std::cout << "The board was not fully visited.\n";
 				}
 				else
 				{
-					std::cout << "A tablat nem lehet teljesen bejarni.\n";
+					std::cout << "A tablat nem jarta be teljesen.\n";
 				}
 			}
 
@@ -2295,15 +2823,15 @@ void guider()
 		else
 		{
 			
-			if (!improved_knights_tour_auto(table, a, b, 0))
+			if (!improved_knights_tour_auto(table, b-1, a_int, 0))
 			{
 				if (lan)
 				{
-					std::cout << "The board cannot be fully visited.\n";
+					std::cout << "The board was not fully visited.\n";
 				}
 				else
 				{
-					std::cout << "A tablat nem lehet teljesen bejarni.\n";
+					std::cout << "A tablat nem jarta be teljesen.\n";
 				}
 			}
 
@@ -2383,6 +2911,10 @@ void guider()
 
 		btn = _getch();
 		break;
+	case 7:
+		knight_domination_man(table,0,0);
+		btn = _getch();
+		break;
 	default:
 		break;
 	}
@@ -2418,7 +2950,9 @@ Chess_Menu:
 		Sleep(40);
 		std::cout << "\n\t6. Bishop dominating";
 		Sleep(40);
-		std::cout << " \n\t7. Back to Main Menu";
+		std::cout << "\n\t7. Knight dominating";
+		Sleep(40);
+		std::cout << " \n\t8. Back to Main Menu";
 	}
 	else
 	{
@@ -2436,7 +2970,9 @@ Chess_Menu:
 		Sleep(40);
 		std::cout << "\n\t6. Futar lefedes";
 		Sleep(40);
-		std::cout << " \n\t7. Vissza a Fo Menube";
+		std::cout << "\n\t7. Huszar lefedes";
+		Sleep(40);
+		std::cout << " \n\t8. Vissza a Fo Menube";
 	}
 
 	btn = _getch();
@@ -2462,6 +2998,9 @@ Chess_Menu:
 		task = 6;
 		break;
 	case '7':
+		task = 7;
+		break;
+	case '8':
 		goto Chess_Menu_End;
 		break;
 	default :
