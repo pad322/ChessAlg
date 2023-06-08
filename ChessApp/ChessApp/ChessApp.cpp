@@ -2140,405 +2140,60 @@ bool bishop_domination_auto(int table[50][50]) // Bishop domination, automatic
 	return true;
 }
 
-bool knight_domination_checker(int table[50][50])
+bool knight_domination_man(int table[50][50])
 {
 
-	make_knight_attacked_table(table);
+	//int x_add[9] = { -1,1,-2,-2, -1,1,2,2 };
+	//int y_add[9] = { -2,-2,-1,1, 2,2,-1,1 };
 
-	for (int i = 0; i < n; ++i)
+
+	//. 2 1
+
+	/// 1 2
+
+	int x_add[9] = {2, -2,-1,1, 2,  1,-1,-2 };
+	int y_add[9] = {1,  1, 2,2,-1, -2,-2,-1 };
+
+	// 1  ( -2 , 1  )
+	// 2  ( -1 , 2  )
+	// 3  ( 1  , 2  )
+	// 4  ( 2  , 1  )
+	// 5  ( 2  , -1 )
+	// 6  ( 1  , -2 )
+	// 7  ( -1 , -2 )
+	// 8  ( -2 , -1 )
+
+	for (int i = 0; i < n/2; ++i)
 	{
-		for (int j = 0; j < n; ++j)
+		make_knight_attacked_table(table);
+
+		for (int k = 0; k < 8; ++k)
 		{
-			if (attacked_table[i][j] == 0)
-				return false;
+			if (i + x_add[k] >= 0 && i + x_add[k] < n && attacked_table[i + x_add[k]][0 + y_add[k]] == 0)
+			{
+				if (0 + y_add[k] >= 0 && 0 + y_add[k] < n && attacked_table[i + x_add[k]][0 + y_add[k]] == 0)
+				{
+					table[i + x_add[k]][0 + y_add[k]] = 1;
+					x_add[0] = 1;
+					y_add[0] = 2;
+					x_add[3] = 2;
+					y_add[3] = 1;
+					system("cls");
+					knight_printer(table);
+					std::cout <<'\n'<< i << '\n';
+					btn = _getch();
+					make_knight_attacked_table(table);
+					k = 0;
+					break;
+				}
+			}
 		}
 	}
+
+	knight_printer(table);
 
 	return true;
 }
-
-bool knight_domination_man(int table[50][50], int x, int y)
-{
-	bool not_done = false;
-
-	if (n <= 3)
-	{
-		knight_printer(table);
-
-		if (lan)
-		{
-			std::cout << "\nCannot be completed.";
-		}
-		else
-		{
-			std::cout << "\nNem megoldhato.";
-		}
-
-		return false;
-	}
-
-	int max = -1;
-	int max_max = -1;
-
-	for (int i = 0; i < n; ++i)
-	{
-		for (int j = 0; j < n; ++j)
-		{
-			int temp = knight_attacked_spots(table, i, j);
-			if (temp > max_max)
-			{
-				max = max_max;
-				max_max = temp;
-			}
-		}
-	}
-
-	int new_table[50][50];
-
-	for (int i = 0; i < n; ++i)
-	{
-		for (int j = 0; j < n; ++j)
-		{
-			new_table[i][j] = 0;
-		}
-	}
-
-	if (n == 4)
-	{
-		for (int i = 0; i < n; ++i)
-		{
-			for (int j = 0; j < n; ++j)
-			{
-				int temp = knight_attacked_spots(new_table, i, j);
-				if (temp == max_max)
-				{
-					table[i][j] = 1;
-				}
-			}
-		}
-
-		knight_printer(table);
-
-		return true;
-
-	}
-	else
-	{
-		bool done = false;
-
-		int top_left_x;
-		int top_left_y;
-		int bottom_right_x;
-		int bottom_right_y;
-
-		for (int i = 0; i < n / 2 + 1; ++i)  // Bal felso negyed
-		{
-			for (int j = 0; j < n / 2 + 1; ++j)
-			{
-				int temp = knight_attacked_spots(new_table, j, i);
-				if (temp == max)
-				{
-					table[j][i] = 1;
-					top_left_x = j;
-					top_left_y = i;
-					done = true;
-					break;
-				}
-			}
-			if (done)
-				break;
-		}
-
-		done = false;
-
-		for (int i = n; i > n / 2 -1; --i) // Bal also negyed
-		{
-			for (int j = 0; j < n / 2 + 1; ++j)
-			{
-				int temp = knight_attacked_spots(new_table, i, j);
-				if (temp == max)
-				{
-					table[i][j] = 1;
-					done = true;
-					break;
-				}
-			}
-			if (done)
-				break;
-		}
-
-		done = false;
-
-		for (int i = n; i > n / 2 - 1; --i) // Jobb also negyed
-		{
-			for (int j = n; j > n / 2 - 1; --j)
-			{
-				int temp = knight_attacked_spots(new_table, j, i);
-				if (temp == max)
-				{
-					table[j][i] = 1;
-					bottom_right_x = j;
-					bottom_right_y = i;
-					done = true;
-					break;
-				}
-			}
-			if (done)
-				break;
-		}
-
-		done = false;
-
-		for (int i = 0; i < n / 2 + 1; ++i) // Jobb felso negyed
-		{
-			for (int j = n; j > n / 2 - 1; --j)
-			{
-				int temp = knight_attacked_spots(new_table, i, j);
-				if (temp == max)
-				{
-					table[i][j] = 1;
-					done = true;
-					break;
-				}
-			}
-			if (done)
-				break;
-		}
-
-		/////
-
-		table[top_left_x][top_left_y+1] = 1;
-
-		table[bottom_right_x][bottom_right_y-1] = 1;
-
-		table[top_left_x][bottom_right_y - 1] = 1;
-
-		table[bottom_right_x][top_left_y+1] = 1;
-
-		if (knight_domination_checker(table))
-		{
-			knight_printer(table);
-			return true;
-		}
-		else
-		{
-
-			Redo:
-
-			max_max = -1;
-
-			int maxok[5]={-1};
-
-			done = false;
-
-			int i, j;
-
-			for (int i = 0; i < n; ++i)
-			{
-				for (int j = 0; j < n; ++j)
-				{
-					new_table[i][j] = knight_attacked_spots_plus(table, i, j);
-				}
-			}
-
-			if (n % 2 == 1)
-			{
-				i = n / 2;
-				j = n / 2 - 1;
-			}
-			else
-			{
-				i = n / 2 -  1;
-				j = n / 2 - 1;
-			}
-
-			for (int ii = i; ii >= 0; --ii) // Bal felso negyed max
-			{
-				for (int jj = j; jj >= 0; --jj)
-				{
-					std::cout << new_table[ii][jj] << ' ';
-					if (new_table[ii][jj] > max_max)
-					{
-						//std::cout << "Bal felso" << '\n';
-						max_max = new_table[ii][jj];
-					}
-				}
-				std::cout << '\n';
-			}
-
-			maxok[0] = max_max;
-
-
-			for (int ii=i; ii >= 0; --ii) // Bal felso negyed
-			{
-				for (int jj=j; jj >= 0; --jj)
-				{
-					if (new_table[ii][jj] == max_max)
-					{
-						//std::cout << "Bal felso" << '\n';
-						table[ii][jj] = 1;
-						done = true;
-						break;
-					}
-				}
-				//std::cout << '\n';
-				if (done)
-					break;
-			}
-			
-
-			done = false;
-
-			if (n % 2 == 1)
-			{
-				i = n / 2+1;
-				j = n / 2;
-			}
-			else
-			{
-				i = n / 2;
-				j = n / 2 - 1;
-			}
-
-			max_max = -1;
-
-			for (int ii = i; ii < n; ++ii) // Bal also negyed max
-			{
-				for (int jj = j; jj >= 0; --jj)
-				{
-					if (new_table[ii][jj] > max_max)
-					{
-						//std::cout << "Bal also";
-						max_max = new_table[ii][jj];
-					}
-				}
-			}
-
-			maxok[1] = max_max;
-			
-			for (int ii = i; ii < n; ++ii) // Bal also negyed
-			{
-				for (int jj = j; jj >= 0; --jj)
-				{
-					if (new_table[ii][jj] == max_max)
-					{
-						//std::cout << "Bal also";
-						table[ii][jj] = 1;
-						done = true;
-						break;
-					}
-				}
-				if (done)
-					break;
-			}
-	
-			done = false;
-
-			if (n % 2 == 1)
-			{
-				i = n / 2;
-				j = n / 2+1 ;
-			}
-			else
-			{
-				i = n / 2;
-				j = n / 2;
-			}
-
-			max_max = -1;
-
-			for (int ii = i; ii < n; ++ii) // Jobb also negyed 
-			{
-				for (int jj = j; jj < n; ++jj)
-				{
-					if (new_table[ii][jj] > max_max)
-					{
-						max_max = new_table[ii][jj];
-					}
-				}
-			}
-
-			maxok[2] = max_max;
-
-			for (int ii=i; ii < n; ++ii) // Jobb also negyed 
-			{
-				for (int jj = j; jj < n; ++jj)
-				{
-					if (new_table[ii][jj] == max_max)
-					{
-						//std::cout << "Jobb also" << '\n';
-						table[ii][jj] = 1;
-						done = true;
-						break;
-					}
-				}
-				if (done)
-					break;
-			}
-
-
-			done = false;
-
-			if (n % 2 == 1)
-			{
-				i = n / 2 -1;
-				j = n / 2;
-			}
-			else
-			{
-				i = n / 2 - 1;
-				j = n / 2;
-			}
-
-			max_max = -1;
-
-			for (int ii = i; ii >= 0; --ii) // Jobb felso negyed max
-			{
-				for (int jj = j; jj < n; ++jj)
-				{
-					if (new_table[ii][jj] > max_max)
-					{
-						max_max= new_table[ii][jj];
-					}
-				}
-			}
-
-			maxok[3] = max_max;
-
-			for (int ii=i; ii >= 0; --ii) // Jobb felso negyed
-			{
-				for (int jj=j; jj < n; ++jj)
-				{
-					if (new_table[ii][jj] == max_max)
-					{
-						///std::cout << "Jobb felso" << '\n';
-						table[ii][jj] = 1;
-						done = true;
-						break;
-					}
-				}
-				if (done)
-					break;
-			}
-
-
-			if (knight_domination_checker(table))
-			{
-				knight_printer(table);
-				return true;
-			}
-			else
-			{
-				goto Redo;
-				//knight_printer(table);
-				//return true;
-			}
-		}
-
-	}
-}
-
-
 
 void guider()
 {
@@ -2912,7 +2567,7 @@ void guider()
 		btn = _getch();
 		break;
 	case 7:
-		knight_domination_man(table,0,0);
+		knight_domination_man(table);
 		btn = _getch();
 		break;
 	default:
