@@ -2,8 +2,7 @@
 Török Csongor - Államvizsga dolgozat 2023
 
 # Dióhéjban
-  Az alkalmazás 3.5 különböző sakkos matematikai problémákra keres megoldást, mindezt interaktívan, lépésenként mutatva az algoritmusok által választott döntéseket.
-
+  Az alkalmazás több különböző sakkos matematikai problémára keres megoldást, mindezt interaktívan, lépésenként mutatva az algoritmusok által választott döntéseket.
 
 # To Do
   - Újabb sakkos problémák implementálása
