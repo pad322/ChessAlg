@@ -2576,6 +2576,12 @@ void guider()
 		{
 			out << 0 << ' ';
 			rook_domination_auto(table);
+
+			if (!interval)
+			{
+				rook_printer(table);
+			}
+
 			done = std::chrono::high_resolution_clock::now();
 		}
 		if (lan)
@@ -2604,6 +2610,13 @@ void guider()
 		{
 			out << 0 << ' ';
 			bishop_domination_auto(table);
+
+			if (!interval)
+			{
+				bishop_printer(table);
+			}
+
+
 			done = std::chrono::high_resolution_clock::now();
 		}
 		if (lan)
@@ -2787,7 +2800,7 @@ bool is_dominated(int table[50][50])
 int goal;
 int figure;
 
-int solution_counter_queens(int table[50][50],int goal, int count)
+int solution_counter_queens(int table[50][50],int goal, int count) // Unoptimized, redo
 {
 	if (count == goal)
 	{
@@ -2812,14 +2825,38 @@ int solution_counter_queens(int table[50][50],int goal, int count)
 	return count;
 }
 
-int solution_counter_rook(int table[50][50], int goal, int count)
-{
-
-}
-
 void chess_challenges()
 {
-	Chess_Challenges:
+Chess_Challenges:
+
+	bool checked = true;
+
+	for (int i = 0; i < 8; ++i)
+	{
+		if (!challenge[i])
+		{
+			checked = false;
+			break;
+		}
+	}
+
+	if (checked)
+	{
+		if (lan)
+		{
+			std::cout << "\n\tSuccessfully completed all challenges! Congratulation!\n";
+			Sleep(40);
+			std::cout << "\tPress any button to return back.\n";
+		}
+		else
+		{
+			std::cout << "\n\tSikeresen megoldotta az osszes kihivast! Gratulalok!\n";
+			Sleep(40);
+			std::cout << "\tNyomjon meg barmilyen gombot a visszalepeshez.\n";
+		}
+		btn = _getch();
+		return;
+	}
 
 	system("cls");
 
@@ -2827,11 +2864,23 @@ void chess_challenges()
 
 	int temp = rand() % 8;
 
+	if (challenge[temp])
+	{
+		for (int i = 0; i < 8; ++i)
+		{
+			if (!challenge[i])
+			{
+				temp = i;
+				break;
+			}
+		}
+	}
+
 	figure = 1; // 1 = Queen, 2 = Rook, 3 = Bishop, 4 = Knight
 	goal = 0; // The max amount allowed to be placed
 	int count = 0;
 
-	int table[50][50];
+	int table[50][50] = { 0 };
 
 	cursor_x = 0;
 	cursor_y = 0;
@@ -2876,34 +2925,11 @@ void chess_challenges()
 			goal = 8;
 			break;
 		case 7:
-			n = 8;
+			n = 7;
 			figure = 4;
-			goal = 12;
+			goal = 10;
 			break;
 		}
-	}
-
-	if (!goal)
-	{
-		for (int i = 0; i < 8; ++i)
-		{
-			if (!challenge[i])
-				goto Chess_Challenges;
-		}
-		if (lan)
-		{
-			std::cout << "\n\tSuccessfully completed all challenges! Congratulation!\n";
-			Sleep(40);
-			std::cout << "\tPress any button to return back.\n";
-		}
-		else
-		{
-			std::cout << "\n\tSikeresen megoldotta az osszes kihivast! Gratulalok!\n";
-			Sleep(40);
-			std::cout << "\tNyomjon meg barmilyen gombot a visszalepeshez.\n";
-		}
-		btn = _getch();
-		return;
 	}
 
 	for (int i = 0; i < n; ++i)
@@ -3368,19 +3394,143 @@ Settings:
 	}
 }
 
+int compare(const void* a, const void* b)
+{
+	return (*(int*)a - *(int*)b);
+}
+
 void record_menu()
 {
+	int nr = 1;
+
 	system("cls");
+
+	std::ifstream in("data.txt");
+
+	int i = 0;
+	int run_int[250], problem_int[250], n_int[250], time_int[250];
+
+	while (!in.eof())
+	{
+		in >> run_int[i] >> problem_int[i] >> n_int[i] >> time_int[i];
+		i++;
+	}
+
+Times_Begin:
+
+	system("cls");
+
 	if (lan)
 	{
-
+		std::cout << "\n\tPress the corresponding problems nr. to show its saved times!\n";
 	}
 	else
 	{
+		std::cout << "\n\tNyomja meg a kivant problema sorszamat hogy a mentett ideit mutassa!\n";
+	}
 
+	if (btn == '1')
+	{
+		if (lan)
+		{
+			std::cout << "\n\n\t1. N-Queen Problem\n";
+		}
+		else
+		{
+			std::cout << "\n\n\t1. N Kiralynos Problema\n";
+		}
+	}
+	if (btn == '2')
+	{
+		if (lan)
+		{
+			std::cout << "\n\n\t2. Independent Dominating Queens\n";
+		}
+		else
+		{
+			std::cout << "\n\n\t2. Kulonallo kiralyno lefedes\n";
+		}
+	}
+
+	if (btn == '3')
+	{
+		if (lan)
+		{
+			std::cout << "\n\n\t3. Dominating Queens\n";
+		}
+		else
+		{
+			std::cout << "\n\n\t3. Kiralyno lefedes\n";
+		}
+	}
+
+	if (btn == '4')
+	{
+		if (lan)
+		{
+			std::cout << "\n\n\t4. Knights Tour\n";
+		}
+		else
+		{
+			std::cout << "\n\n\t4. Huszar turne\n";
+		}
+	}
+
+	if (btn == '5')
+	{
+		if (lan)
+		{
+			std::cout << "\n\n\t5. Dominating Rooks\n";
+		}
+		else
+		{
+			std::cout << "\n\n\t5. Bastya lefedes\n";
+		}
+	}
+
+	if (btn == '6')
+	{
+		if (lan)
+		{
+			std::cout << "\n\n\t6. Dominating Bishops\n";
+		}
+		else
+		{
+			std::cout << "\n\n\t6. Futar lefedes\n";
+		}
+	}
+
+	if (lan)
+	{
+		std::cout << "\n\t| Size |\t\t| Time |";
+	}
+	else
+	{
+		std::cout << "\n\t| Meret |\t\t| Ido |";
+	}
+
+	int j = 0;
+
+	//qsort(time_int, i, sizeof(int), compare);
+
+	while (j < i)
+	{
+		char problem_char = '0' + problem_int[j];
+
+		if (problem_char==btn && !run_int[j])
+		{
+			std::cout << "\n\t  " << n_int[j] <<'x'<< n_int[j] << "\t\t\t  " << time_int[j];
+		}
+		j++;
 	}
 
 	btn = _getch();
+
+	if (btn >= '1' && btn <= '6')
+	{
+		goto Times_Begin;
+	}
+
 }
 
 void notes_menu()
@@ -3424,10 +3574,6 @@ void notes_menu()
 	}
 
 	btn = _getch();
-}
-
-void exit_part()
-{
 }
 
 void intro_screen()
