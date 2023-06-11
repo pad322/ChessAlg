@@ -14,6 +14,9 @@ int task;
 
 int n, m;
 
+int cursor_x = -1;
+int cursor_y = -1;
+
 /*
 void timer(chrono::seconds delay)
 {
@@ -112,11 +115,11 @@ void make_rook_attacked_table(int table[50][50])
 				{
 					attacked_table[i][j] = 2;
 				}
-				else if (i == xcoord[l])
+				else if (i == xcoord[l] && attacked_table[i][j] != 2)
 				{
 					attacked_table[i][j] = 1;
 				}
-				else if (j == ycoord[l])
+				else if (j == ycoord[l] && attacked_table[i][j] != 2)
 				{
 					attacked_table[i][j] = 1;
 				}
@@ -201,7 +204,7 @@ void make_bishop_attacked_table(int table[50][50])
 				{
 					attacked_table[i][j] = 2;
 				}
-				else if (std::abs(i - xcoord[l]) == std::abs(j - ycoord[l]))
+				else if (std::abs(i - xcoord[l]) == std::abs(j - ycoord[l]) && attacked_table[i][j] !=2)
 				{
 					attacked_table[i][j] = 1;
 				}
@@ -257,14 +260,42 @@ void queen_printer(int table[50][50]) // detailed chess table printer
 				{
 					if (attacked_table[i][j] == 0)
 					{
-						std::cout << "|     ";
+						if (cursor_x == i && cursor_y == j)
+						{
+							if (temp != 1)
+								std::cout << "| +++ ";
+							else
+								std::cout << "|+   +";
+						}
+						else
+							std::cout << "|     ";
 					}
 					if (attacked_table[i][j] == 1)
 					{
-						std::cout << "|#####";
+						if (cursor_x == i && cursor_y == j)
+						{
+							if (temp != 1)
+								std::cout << "|#+++#";
+							else
+								std::cout << "|+   +";
+						}
+						else
+							std::cout << "|#####";
 					}
 					if (attacked_table[i][j] == 2)
 					{
+						if (cursor_x == i && cursor_y == j)
+						{
+							if (temp != 1)
+							{
+								std::cout << "| +++ ";
+							}
+							else
+							{
+								std::cout << "|+ Q +";
+							}
+						}
+						else
 						if (temp != 1)
 						{
 							std::cout << "|     ";
@@ -348,15 +379,36 @@ void knight_printer(int table[50][50])
 				{
 					if (attacked_table[i][j] == 0)
 					{
-						std::cout << "|     ";
+						if (cursor_x == i && cursor_y == j)
+						{
+							if (temp != 1)
+								std::cout << "| +++ ";
+							else
+								std::cout << "|+   +";
+						}
+						else std::cout << "|     ";
 					}
 					if (attacked_table[i][j] == 1)
 					{
-						std::cout << "|#####";
+						if (cursor_x == i && cursor_y == j)
+						{
+							if (temp != 1)
+								std::cout << "|#+++#";
+							else
+								std::cout << "|+   +";
+						}
+						else std::cout << "|#####";
 					}
 					if (attacked_table[i][j] == 2)
 					{
-						if (temp != 1)
+						if (cursor_x == i && cursor_y == j)
+						{
+							if (temp != 1)
+								std::cout << "| +++ ";
+							else
+								std::cout << "|+ H +";
+						}
+						else if (temp != 1)
 						{
 							std::cout << "|     ";
 						}
@@ -529,15 +581,36 @@ void rook_printer(int table[50][50])
 				{
 					if (attacked_table[i][j] == 0)
 					{
-						std::cout << "|     ";
+						if (cursor_x == i && cursor_y == j)
+						{
+							if (temp != 1)
+								std::cout << "| +++ ";
+							else
+								std::cout << "|+   +";
+						}
+						else std::cout << "|     ";
 					}
 					if (attacked_table[i][j] == 1)
 					{
-						std::cout << "|#####";
+						if (cursor_x == i && cursor_y == j)
+						{
+							if (temp != 1)
+								std::cout << "|#+++#";
+							else
+								std::cout << "|+   +";
+						}
+						else std::cout << "|#####";
 					}
 					if (attacked_table[i][j] == 2)
 					{
-						if (temp != 1)
+						if (cursor_x == i && cursor_y == j)
+						{
+							if (temp != 1)
+								std::cout << "| +++ ";
+							else
+								std::cout << "|+ T +";
+						}
+						else if (temp != 1)
 						{
 							std::cout << "|     ";
 						}
@@ -620,15 +693,36 @@ void bishop_printer(int table[50][50])
 				{
 					if (attacked_table[i][j] == 0)
 					{
-						std::cout << "|     ";
+						if (cursor_x == i && cursor_y == j)
+						{
+							if (temp != 1)
+								std::cout << "| +++ ";
+							else
+								std::cout << "|+   +";
+						}
+						else std::cout << "|     ";
 					}
 					if (attacked_table[i][j] == 1)
 					{
-						std::cout << "|#####";
+						if (cursor_x == i && cursor_y == j)
+						{
+							if (temp != 1)
+								std::cout << "|#+++#";
+							else
+								std::cout << "|+   +";
+						}
+						else std::cout << "|#####";
 					}
 					if (attacked_table[i][j] == 2)
 					{
-						if (temp != 1)
+						if (cursor_x == i && cursor_y == j)
+						{
+							if (temp != 1)
+								std::cout << "|#+++#";
+							else
+								std::cout << "|+ B +";
+						}
+						else if (temp != 1)
 						{
 							std::cout << "|     ";
 						}
@@ -1626,6 +1720,7 @@ int knight_attacked_spots_plus(int table[50][50], int x, int y) // Hany pontot t
 	return count;
 }
 
+/*
 void knight_tour(int table[50][50], int x, int y) // Helytelen
 {
 	table[x][y] = 3;
@@ -1640,11 +1735,11 @@ void knight_tour(int table[50][50], int x, int y) // Helytelen
 	int x_add[9] = { -1,1,-2,-2, -1,1,2,2 };
 	int y_add[9] = { -2,-2,-1,1, 2,2,-1,1 };
 
-	/*if (x % n == 0)
-	{
-		int x_add[9] = { -1,1,-2,-2, -1,1,2,2 };
-		int y_add[9] = { -2,-2,-1,1, 2,2,1,-1 };
-	}*/
+	//if (x % n == 0)
+	//{
+	//	int x_add[9] = { -1,1,-2,-2, -1,1,2,2 };
+	//	int y_add[9] = { -2,-2,-1,1, 2,2,1,-1 };
+	//}
 
 	for (int k = 0; k < 8; ++k)
 	{
@@ -1672,8 +1767,8 @@ void knight_tour(int table[50][50], int x, int y) // Helytelen
 	system("cls");
 
 	knight_tour(table, x_new, y_new);
-	
 }
+*/
 
 bool improved_knights_tour_auto(int table[50][50], int x, int y, int count) // Knights tour, automatic
 {
@@ -2534,8 +2629,6 @@ void guider()
 	}
 
 	out.close();
-
-Guider_End:
 		
 	system("cls");
 
@@ -2622,8 +2715,6 @@ Chess_Menu:
 		break;
 	}
 
-Chess_Menu_Mid:
-
 	system("cls");
 
 	/*
@@ -2676,6 +2767,407 @@ Chess_Menu_End:
 
 	system("cls");
 
+}
+
+bool challenge[8] = { false };
+
+bool is_dominated(int table[50][50])
+{
+	for (int i = 0; i < n; ++i)
+	{
+		for (int j = 0; j < n; ++j)
+		{
+			if (table[i][j] == 0)
+				return false;
+		}
+	}
+	return true;
+}
+
+int goal;
+int figure;
+
+void chess_challenges()
+{
+	Chess_Challenges:
+
+	system("cls");
+
+	srand(time(NULL));
+
+	int temp = rand() % 8;
+
+	figure = 1; // 1 = Queen, 2 = Rook, 3 = Bishop, 4 = Knight
+	goal = 0; // The max amount allowed to be placed
+	int count = 0;
+
+	int table[50][50];
+
+	cursor_x = 0;
+	cursor_y = 0;
+
+	if (!challenge[temp])
+	{
+		switch (temp)
+		{
+		case 0:
+			n = 8;
+			figure = 1;
+			goal = 5;
+			break;
+		case 1:
+			n = 5;
+			figure = 4;
+			goal = 5;
+			break;
+		case 2:
+			n = 8;
+			figure = 3;
+			goal = 12;
+			break;
+		case 3:
+			n = 4;
+			figure = 4;
+			goal = 4;
+			break;
+		case 4:
+			n = 6;
+			figure = 1;
+			goal=3;
+			break;
+		case 5:
+			n = 8;
+			figure = 3;
+			goal = 8;
+			break;
+		case 6:
+			n = 8;
+			figure = 2;
+			goal = 8;
+			break;
+		case 7:
+			n = 8;
+			figure = 4;
+			goal = 12;
+			break;
+		}
+	}
+
+	if (!goal)
+	{
+		for (int i = 0; i < 8; ++i)
+		{
+			if (!challenge[i])
+				goto Chess_Challenges;
+		}
+		if (lan)
+		{
+			std::cout << "\n\tSuccessfully completed all challenges! Congratulation!\n";
+			Sleep(40);
+			std::cout << "\tPress any button to return back.\n";
+		}
+		else
+		{
+			std::cout << "\n\tSikeresen megoldotta az osszes kihivast! Gratulalok!\n";
+			Sleep(40);
+			std::cout << "\tNyomjon meg barmilyen gombot a visszalepeshez.\n";
+		}
+		btn = _getch();
+		return;
+	}
+
+	for (int i = 0; i < n; ++i)
+	{
+		for (int j = 0; j < n; ++j)
+		{
+			table[i][j] = 0;
+		}
+	}
+
+Reprint:
+
+	if (count > goal)
+	{
+		table[cursor_x][cursor_y] = 0;
+	}
+
+	if (figure == 1)
+	{
+		queen_printer(table);
+		if (lan)
+		{
+			std::cout << "\nDominate the table with " << goal << " queens!\n";
+		}
+		else
+		{
+			std::cout << "\nFedd le a tablat " << goal << " darab kiralynovel!\n";
+		}
+
+		make_attacked_table(table);
+		
+		if(count==goal)
+		if (is_dominated(attacked_table))
+		{
+			challenge[temp] = true;
+			if (lan)
+			{
+				std::cout << "\nSuccessfully dominated!\n";
+			}
+			else
+			{
+				std::cout << "\nSikeresen lefedve!\n";
+			}
+			count = 0;
+			goal = 0;
+			btn = _getch();
+
+			return;
+
+		}
+
+	}
+	if (figure == 2)
+	{
+		rook_printer(table);
+		if (lan)
+		{
+			std::cout << "\nDominate the table with " << goal << " rooks!\n";
+		}
+		else
+		{
+			std::cout << "\nFedd le a tablat " << goal << " darab bastyaval!\n";
+		}
+
+		make_rook_attacked_table(table);
+
+		if (count == goal)
+		if (is_dominated(attacked_table))
+		{
+			challenge[temp] = true;
+			if (lan)
+			{
+				std::cout << "\nSuccessfully dominated!\n";
+			}
+			else
+			{
+				std::cout << "\nSikeresen lefedve!\n";
+			}
+
+			btn = _getch();
+
+			return;
+
+		}
+	}
+	if (figure == 3)
+	{
+		bishop_printer(table);
+		if (lan)
+		{
+			std::cout << "\nDominate the table with " << goal << " bishops!\n";
+		}
+		else
+		{
+			std::cout << "\nFedd le a tablat " << goal << " darab futarral!\n";
+		}
+
+		make_bishop_attacked_table(table);
+
+		if (count == goal)
+		if (is_dominated(attacked_table))
+		{
+			challenge[temp] = true;
+			if (lan)
+			{
+				std::cout << "\nSuccessfully dominated!\n";
+			}
+			else
+			{
+				std::cout << "\nSikeresen lefedve!\n";
+			}
+
+			btn = _getch();
+
+			return;
+
+		}
+	}
+	if (figure == 4)
+	{
+		knight_printer(table);
+
+
+		if (lan)
+		{
+			std::cout << "\nDominate the table with " << goal << " knights!\n";
+		}
+		else
+		{
+			std::cout << "\nFedd le a tablat " << goal << " darab huszarral!\n";
+		}
+
+		make_knight_attacked_table(table);
+
+		if (count == goal)
+		if (is_dominated(attacked_table))
+		{
+			challenge[temp] = true;
+			if (lan)
+			{
+				std::cout << "\nSuccessfully dominated!\n";
+			}
+			else
+			{
+				std::cout << "\nSikeresen lefedve!\n";
+			}
+
+			btn = _getch();
+
+			return;
+
+		}
+	}
+
+	if (count > goal)
+	{
+		count--;
+		if (lan)
+		{
+			std::cout << "\nCannot place more pieces!\n";
+		}
+		else
+		{
+			std::cout << "\nNem helyezhet el tobb babut!\n";
+		}
+	}
+	
+	btn = _getch();
+
+	if (btn == ' ')
+	{
+		if (!table[cursor_x][cursor_y])
+		{
+			count++;
+			table[cursor_x][cursor_y] = 1;
+		}
+		else
+		{
+			count--;
+			table[cursor_x][cursor_y] = 0;
+		}
+		system("cls");
+		goto Reprint;
+	}
+
+	if (btn == 'w')
+	{
+		if (cursor_x - 1 == -1)
+		{
+			cursor_x = n - 1;
+		}
+		else
+			cursor_x = cursor_x - 1;
+		system("cls");
+		goto Reprint;
+	}
+	else
+		if (btn == 'a')
+		{
+			if (cursor_y - 1 == -1)
+			{
+				cursor_y = n - 1;
+			}
+			else
+				cursor_y = cursor_y - 1;
+			system("cls");
+			goto Reprint;
+		}
+		else
+			if (btn == 's')
+			{
+				cursor_x = cursor_x + 1;
+				if (cursor_x + 1 > n)
+				{
+					cursor_x = 0;
+				}
+				system("cls");
+				goto Reprint;
+			}
+			else
+				if (btn == 'd')
+				{
+					cursor_y = cursor_y + 1;
+					if (cursor_y + 1 > n)
+					{
+						cursor_y = 0;
+					}
+					system("cls");
+					goto Reprint;
+				}
+				else
+					if (btn == 'q')
+					{
+						cursor_x = -1;
+						cursor_y = -1;
+						count = 0;
+						goal = 0;
+						system("cls");
+						return;
+					}
+					else
+					{
+						system("cls");
+						goto Reprint;
+					}
+}
+
+bool first_time = false;
+
+void challenge_menu()
+{
+	system("cls");
+
+	if (!first_time)
+	{
+
+		first_time = true;
+
+		if (lan)
+		{
+			std::cout << "\n\t\t Chess Challenges\n";
+			Sleep(40);
+			std::cout << "\n\tTry to solve the given prompts, by moving the cursor with the WASD keys,\n\tand placing/removing pieces from the board with the Space bar!\n";
+			Sleep(40);
+			std::cout << "\n\tYou can quit any time by pressing the letter Q.\n";
+			Sleep(40);
+			std::cout << "\tGood luck! Press any button to proceed or Q to quit.\n";
+		}
+		else
+		{
+			std::cout << "\n\t\t Sakkos kihivasok\n";
+			Sleep(40);
+			std::cout << "\n\tProbald megoldani az adott feladatokat, a kurzort a WASD gombok segitsegevel mozgatva,\n\telhelyezve illetve leveve babukat a tablara Space gomb lenyomasaval!\n";
+			Sleep(40);
+			std::cout << "\n\tBarmikor kilephet a Q gomb segitsegevel.\n";
+			Sleep(40);
+			std::cout << "\tSok szerencset! Nyomjon meg barmilyen gombot a tovabblepeshez vagy Q-t a kilepeshez.\n";
+		}
+
+		btn = _getch();
+
+		if (btn == 'q')
+		{
+			system("cls");
+		}
+		else
+		{
+			chess_challenges();
+		}
+	}
+	else
+	{
+		chess_challenges();
+	}
 }
 
 void fill_settings()
@@ -3001,27 +3493,31 @@ MainMenu :
 		Sleep(40);
 		std::cout << "\t1. Chess Problems\n";
 		Sleep(40);
-		std::cout << "\t2. Settings\n";
+		std::cout << "\t2. Chess Challenges\n";
 		Sleep(40);
-		std::cout << "\t3. Notes\n";
+		std::cout << "\t3. Settings\n";
 		Sleep(40);
-		std::cout << "\t4. Recorded Times\n";
+		std::cout << "\t4. Notes\n";
 		Sleep(40);
-		std::cout << "\t5. Exit\n";
+		std::cout << "\t5. Recorded Times\n";
+		Sleep(40);
+		std::cout << "\t6. Exit\n";
 	}
 	else
 	{
-		std::cout << "\n\t\tFo menu\n\n";
+		std::cout << "\n\t\tFo Menu\n\n";
 		Sleep(40);
-		std::cout << "\t1. Sakk problemak\n";
+		std::cout << "\t1. Sakk Problemak\n";
 		Sleep(40);
-		std::cout << "\t2. Beallitasok\n";
+		std::cout << "\t2. Sakk Kihivas\n";
 		Sleep(40);
-		std::cout << "\t3. Jegyzetek\n";
+		std::cout << "\t3. Beallitasok\n";
 		Sleep(40);
-		std::cout << "\t4. Mentett idok\n";
+		std::cout << "\t4. Jegyzetek\n";
 		Sleep(40);
-		std::cout << "\t5. Kilepes\n";
+		std::cout << "\t5. Mentett Idok\n";
+		Sleep(40);
+		std::cout << "\t6. Kilepes\n";
 	}
 
 	btn = _getch();
@@ -3032,15 +3528,18 @@ MainMenu :
 		chess_menu();
 		break;
 	case '2':
-		settings_menu();
+		challenge_menu();
 		break;
 	case '3':
-		notes_menu();
+		settings_menu();
 		break;
 	case '4':
-		record_menu();
+		notes_menu();
 		break;
 	case '5':
+		record_menu();
+		break;
+	case '6':
 
 		Exit :
 
