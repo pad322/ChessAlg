@@ -2,7 +2,6 @@
 #include <conio.h>
 #include <chrono>
 #include <Windows.h>
-#include <future>
 #include <fstream>
 
 char btn;
@@ -1410,8 +1409,7 @@ bool dominating_queens_auto_brute(int table[50][50],int count) // Brute-Force Qu
 
 void dominating_queens_man(int table[50][50],int count) // Greedy Queen Domintation, manual
 {
-	//make_attacked_table(table);
-
+	make_attacked_table(table);
 
 	if (btn == 'a')
 	{
@@ -2142,18 +2140,6 @@ bool bishop_domination_auto(int table[50][50]) // Bishop domination, automatic
 
 bool knight_domination_man(int table[50][50])
 {
-
-	//int x_add[9] = { -1,1,-2,-2, -1,1,2,2 };
-	//int y_add[9] = { -2,-2,-1,1, 2,2,-1,1 };
-
-
-	//. 2 1
-
-	/// 1 2
-
-	int x_add[9] = {2, -2,-1,1, 2,  1,-1,-2 };
-	int y_add[9] = {1,  1, 2,2,-1, -2,-2,-1 };
-
 	// 1  ( -2 , 1  )
 	// 2  ( -1 , 2  )
 	// 3  ( 1  , 2  )
@@ -2163,34 +2149,7 @@ bool knight_domination_man(int table[50][50])
 	// 7  ( -1 , -2 )
 	// 8  ( -2 , -1 )
 
-	for (int i = 0; i < n/2; ++i)
-	{
-		make_knight_attacked_table(table);
 
-		for (int k = 0; k < 8; ++k)
-		{
-			if (i + x_add[k] >= 0 && i + x_add[k] < n && attacked_table[i + x_add[k]][0 + y_add[k]] == 0)
-			{
-				if (0 + y_add[k] >= 0 && 0 + y_add[k] < n && attacked_table[i + x_add[k]][0 + y_add[k]] == 0)
-				{
-					table[i + x_add[k]][0 + y_add[k]] = 1;
-					x_add[0] = 1;
-					y_add[0] = 2;
-					x_add[3] = 2;
-					y_add[3] = 1;
-					system("cls");
-					knight_printer(table);
-					std::cout <<'\n'<< i << '\n';
-					btn = _getch();
-					make_knight_attacked_table(table);
-					k = 0;
-					break;
-				}
-			}
-		}
-	}
-
-	knight_printer(table);
 
 	return true;
 }
