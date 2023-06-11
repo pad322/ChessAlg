@@ -2787,6 +2787,36 @@ bool is_dominated(int table[50][50])
 int goal;
 int figure;
 
+int solution_counter_queens(int table[50][50],int goal, int count)
+{
+	if (count == goal)
+	{
+		return count;
+	}
+
+	count=0;
+	for (int i = 0; i < n; ++i)
+	{
+		for (int j = 0; j < n; ++j)
+		{
+			if (dominating_safe_queen(table,i,j))
+			{
+				count++;
+				table[i][j] = 1;
+				solution_counter_queens(table, goal, count);
+				table[i][j] = 0;
+			}
+		}
+	}
+
+	return count;
+}
+
+int solution_counter_rook(int table[50][50], int goal, int count)
+{
+
+}
+
 void chess_challenges()
 {
 	Chess_Challenges:
@@ -2893,6 +2923,9 @@ Reprint:
 
 	if (figure == 1)
 	{
+
+		//int solutions = solution_counter_queens(table, goal, 0);
+
 		queen_printer(table);
 		if (lan)
 		{
@@ -2902,6 +2935,8 @@ Reprint:
 		{
 			std::cout << "\nFedd le a tablat " << goal << " darab kiralynovel!\n";
 		}
+
+		//std::cout << "\nSolutions left : " << solutions << "\n";
 
 		make_attacked_table(table);
 		
@@ -2928,6 +2963,8 @@ Reprint:
 	}
 	if (figure == 2)
 	{
+		//int solutions = solution_counter_rook(table, goal, 0);
+
 		rook_printer(table);
 		if (lan)
 		{
@@ -2937,6 +2974,8 @@ Reprint:
 		{
 			std::cout << "\nFedd le a tablat " << goal << " darab bastyaval!\n";
 		}
+
+		//std::cout << "\nSolutions left : " << solutions << "\n";
 
 		make_rook_attacked_table(table);
 
