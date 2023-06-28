@@ -1774,7 +1774,7 @@ bool rook_domination_man(int table[50][50]) // Chaotic Rook domination, manual
 	}
 	return true;
 }
-bool rook_domination_auto(int table[50][50]) // Chaotic Rook domination, manual
+bool rook_domination_auto(int table[50][50])
 {
 	srand(time(NULL));
 	int count = 0;
@@ -2942,7 +2942,6 @@ Reprint:
 	}
 	if (figure == 1)
 	{
-		//int solutions = solution_counter_queens(table, goal, 0);
 		queen_printer(table);
 		if (lan)
 		{
