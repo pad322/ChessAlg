@@ -2352,18 +2352,18 @@ Guider_Begin:
 	{
 		//std::cout << "\n\t Numbers above 10 might take longer!";
 		//Sleep(40);
-		std::cout << "\n\t Please enter the chess tables dimension (NxN, N<38) : ";
+		std::cout << "\n\t Please enter the chess tables dimension (NxN, N<35) : ";
 		std::cin >> n;
 	}
 	else
 	{
 		//std::cout << "\n\t 10 folotti szamok tobb idot vehetnek igenybe!";
 		//Sleep(40);
-		std::cout << "\n\t Kerem adja meg a sakk tabla meretet (NxN, N<38) : ";
+		std::cout << "\n\t Kerem adja meg a sakk tabla meretet (NxN, N<35) : ";
 		std::cin >> n;
 	}
 	system("cls");
-	if ((n < 0) || (n > 38))
+	if ((n < 0) || (n > 35))
 	{
 		if (lan)
 			std::cout << "\n\tInvalid data!";
