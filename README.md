@@ -1,4 +1,4 @@
-# Chess_Problem_Solver
+# ChessAlg
 Török Csongor - Államvizsga dolgozat 2023
 
 # Dióhéjban
