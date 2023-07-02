@@ -1,4 +1,7 @@
 # ChessAlg
+
+![alt text](https://github.com/pad322/ChessAlg/edit/main/logo.png?raw=true)
+
 Török Csongor - Államvizsga dolgozat 2023
 
 # Dióhéjban
