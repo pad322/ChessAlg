@@ -2,7 +2,7 @@
 
 ![alt text](https://github.com/pad322/ChessAlg/blob/main/logo.png?raw=true)
 
-Török Csongor - Államvizsga dolgozat 2023, Sapientia EMTE, Informatik szazk
+Török Csongor - Államvizsga dolgozat 2023, Sapientia EMTE Marosvásárhely, Informatika szak
 
 # Dióhéjban
   Az alkalmazás több különböző sakkos problémára keres megoldást, mindezt interaktívan, lépésenként mutatva az algoritmusok által választott döntéseket.
