@@ -7,13 +7,13 @@ Török Csongor - Államvizsga dolgozat 2023
 # Dióhéjban
   Az alkalmazás több különböző sakkos problémára keres megoldást, mindezt interaktívan, lépésenként mutatva az algoritmusok által választott döntéseket.
   Kezelt problémák :
-    - N Királynő
-    - Királynő különálló lefedés
-    - Királynő lefedés
-    - Futár lefedés
-    - Bástya lefedés
-    - Huszár turné
-    - Huszár lefedés ( WIP )
+  - N Királynő
+  - Királynő különálló lefedés
+  - Királynő lefedés
+  - Futár lefedés
+  - Bástya lefedés
+  - Huszár turné
+  - Huszár lefedés ( WIP )
 
 # To Do
   - Újabb sakkos problémák implementálása
